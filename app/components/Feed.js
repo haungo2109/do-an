@@ -3,10 +3,15 @@ import { View } from 'react-native';
 import styled from 'styled-components/native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import Avatar from './Avatar';
-import { baseURI } from '../api/apiClient';
+import { baseURL } from '../api/apiClient';
+import { useDispatch } from 'react-redux';
+import { dislikePost, likePost } from '../redux/reducers/postReducer';
+import Colors from '../config/Colors';
 
 const Container = styled.View`
 	flex: 1;
+	margin-bottom: 10px;
+	background-color: ${Colors.gray};
 `;
 const Header = styled.View`
 	height: 50px;
@@ -35,9 +40,24 @@ const Post = styled.Text`
 	line-height: 16px;
 	padding: 0 11px;
 `;
+const TextHashTag = styled(Post)`
+	background-color: ${Colors.gray2};
+	margin-left: 11px;
+    padding: 0 2px;
+    border-radius: 3px;
+`;
+const WrapperTextHashTag = styled.View`
+	flex-direction: row;
+	flex-wrap: wrap;
+`;
 const Photo = styled.Image`
 	margin-top: 9px;
-	width: 100%;
+	margin-right: 5px;
+	width: 500px;
+	height: 100%;
+`;
+
+const WrapperImage = styled.ScrollView`
 	height: 300px;
 `;
 const Footer = styled.View`
@@ -73,6 +93,9 @@ const FooterMenu = styled.View`
 `;
 const Button = styled.TouchableOpacity`
 	flex-direction: row;
+	padding: 5px;
+	border-radius: 7px;
+	background-color: ${Colors.gray2};
 `;
 const Icon = styled.View`
 	margin-right: 6px;
@@ -81,124 +104,104 @@ const Text = styled.Text`
 	font-size: 12px;
 	color: #424040;
 `;
-const BottomDivider = styled.View`
-	width: 100%;
-	height: 9px;
-	background: #f0f2f5;
-`;
-
 const Feed = ({
 	content,
 	create_at,
-	hashtag,
+	hashtag = [],
 	id,
-	like,
+	like = false,
 	post_images,
 	user,
 	vote,
 }) => {
+	const dispatch = useDispatch();
+
+	const handleLikeButton = () => {
+		dispatch(likePost(id));
+	};
+	const handleDislikeButton = () => {
+		dispatch(dislikePost(id));
+	};
+
 	return (
-		<>
-			<Container>
-				<Header>
-					<Row>
-						<Avatar
-							source={{
-								uri: baseURI + user.avatar,
-							}}
-						/>
-						<View style={{ paddingLeft: 10 }}>
-							<User>{user.full_name}</User>
-							<Row>
-								<Time>{create_at}</Time>
-								<Entypo
-									name="dot-single"
-									size={12}
-									color="#747476"
-								/>
-								<Entypo
-									name="globe"
-									size={10}
-									color="#747476"
-								/>
-							</Row>
-						</View>
-					</Row>
-
-					<Entypo
-						name="dots-three-horizontal"
-						size={15}
-						color="#222121"
+		<Container>
+			<Header>
+				<Row>
+					<Avatar
+						source={{
+							uri: baseURL + user.avatar,
+						}}
 					/>
-				</Header>
-
-				<Post>{content}</Post>
-				{post_images.map((c) => (
-                    
-					<Photo key={c} source={{ uri: baseURI + c }} />
-				))}
-
-				<Footer>
-					<FooterCount>
+					<View style={{ paddingLeft: 10 }}>
+						<User>{user.full_name}</User>
 						<Row>
-							<IconCount>
-								<AntDesign
-									name="like1"
-									size={12}
-									color="#FFFFFF"
-								/>
-							</IconCount>
-							<TextCount>
-								{vote} {vote < 2 ? 'like' : 'likes'}
-							</TextCount>
+							<Time>{create_at}</Time>
+							<Entypo
+								name="dot-single"
+								size={12}
+								color="#747476"
+							/>
+							<Entypo name="globe" size={10} color="#747476" />
 						</Row>
-						<TextCount>2k comments</TextCount>
-					</FooterCount>
+					</View>
+				</Row>
 
-					<Separator />
+				<Entypo
+					name="dots-three-horizontal"
+					size={15}
+					color="#222121"
+				/>
+			</Header>
 
-					<FooterMenu>
-						<Button>
-							<Icon>
-								<AntDesign
-									name="like2"
-									size={20}
-									color={
-										like.includes(user.id)
-											? 'blue'
-											: '#424040'
-									}
-								/>
-							</Icon>
-							<Text>Like</Text>
-						</Button>
+			<Post>{content}</Post>
+			{hashtag?.length !== 0 && (
+				<WrapperTextHashTag>
+					<TextHashTag>
+						{hashtag.map((c) => '#' + c.name).join(', ')}
+					</TextHashTag>
+				</WrapperTextHashTag>
+			)}
+			{post_images?.length !== 0 && (
+				<WrapperImage horizontal showsHorizontalScrollIndicator={false}>
+					{post_images.map((c) => (
+						<Photo
+							style={{ resizeMode: 'contain' }}
+							key={c}
+							source={{ uri: baseURL + c }}
+						/>
+					))}
+				</WrapperImage>
+			)}
 
-						<Button>
-							<Icon>
-								<MaterialCommunityIcons
-									name="comment-outline"
-									size={20}
-									color="#424040"
-								/>
-							</Icon>
-							<Text>Comment</Text>
-						</Button>
+			<Footer>
+				<Separator />
+				<FooterMenu>
+					<Button
+						onPress={like ? handleDislikeButton : handleLikeButton}
+					>
+						<Icon>
+							<AntDesign
+								name="like2"
+								size={20}
+								color={like ? 'blue' : '#424040'}
+							/>
+						</Icon>
+						<Text>{vote}</Text>
+					</Button>
 
-						<Button>
-							<Icon>
-								<MaterialCommunityIcons
-									name="share-outline"
-									size={20}
-									color="#424040"
-								/>
-							</Icon>
-							<Text>Share</Text>
-						</Button>
-					</FooterMenu>
-				</Footer>
-				<BottomDivider />
-			</Container>
-		</>
+					<Button>
+						<Icon>
+							<MaterialCommunityIcons
+								name="comment-outline"
+								size={20}
+								color="#424040"
+							/>
+						</Icon>
+						<Text>1 comment</Text>
+					</Button>
+				</FooterMenu>
+			</Footer>
+		</Container>
 	);
 };
 

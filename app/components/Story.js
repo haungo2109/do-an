@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 
 import { AntDesign } from '@expo/vector-icons'
 
-import Avatar from './Avatar'
+import AvatarToProfile from './Avatar'
 
 const Container = styled.View`
 	width: 100%;
@@ -83,7 +83,7 @@ const Story = () => {
 							source={require('../assets/story2.jpg')}
 						/>
 						<CardUser>
-							<Avatar
+							<AvatarToProfile
 								source={require('../assets/user2.jpg')}
 								story={true}
 							/>
@@ -98,7 +98,7 @@ const Story = () => {
 							source={require('../assets/story3.jpg')}
 						/>
 						<CardUser>
-							<Avatar
+							<AvatarToProfile
 								source={require('../assets/user3.jpg')}
 								story={true}
 							/>
@@ -113,7 +113,7 @@ const Story = () => {
 							source={require('../assets/story4.jpg')}
 						/>
 						<CardUser>
-							<Avatar
+							<AvatarToProfile
 								source={require('../assets/user4.jpg')}
 								story={true}
 							/>

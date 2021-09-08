@@ -1,8 +1,7 @@
 import React from 'react'
-
 import styled from 'styled-components/native'
-
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/core'
 
 const Container = styled.View`
 	width: 100%;
@@ -32,20 +31,29 @@ const Button = styled.TouchableOpacity`
 `
 
 const AppBar = () => {
+    const navigation = useNavigation();
+
+    const handleChatButtonPress = () => {
+		navigation.navigate('Chat');
+	};
+
 	return (
 		<Container>
-			<Text>facebook</Text>
+			<Text>Kanj</Text>
 			<Row>
 				<Button>
-					<Feather name='search' size={29} color='black' />
+					<Feather name="search" size={29} color="black" />
 				</Button>
 
-				<Button>
-					<MaterialCommunityIcons name='facebook-messenger' size={29} />
+				<Button onPress={handleChatButtonPress}>
+					<MaterialCommunityIcons
+						name="facebook-messenger"
+						size={29}
+					/>
 				</Button>
 			</Row>
 		</Container>
-	)
+	);
 }
 
 export default AppBar

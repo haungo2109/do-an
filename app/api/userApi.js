@@ -14,7 +14,7 @@ const userApi = {
 	 */
 	login: (data) => {
 		const url = '/o/token/';
-		return api.post(url, {body: data});
+		return api.post(url, data, config);
 	},
 	logout: () => {
 		const url = '/o/revoke-token/';
@@ -34,14 +34,14 @@ const userApi = {
 	},
 	register: (data) => {
 		const url = '/user/';
-		return api.post(url, data, config);
+		return api.post(url, body);
 	},
 	getUserInfo: (id) => {
-		const url = `/user/${id}`
+		const url = `/user/${id}`;
 		return api.get(url);
 	},
 	getCurrentUserInfo: () => {
-		const url = `/user/current-user/`
+		const url = `/user/current-user/`;
 		return api.get(url);
 	},
 };

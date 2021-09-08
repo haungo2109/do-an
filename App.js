@@ -27,17 +27,12 @@ export default function App() {
 	return (
 		<Provider store={store}>
 			<PersistGate loading={<LoadingMarkup />} persistor={persistor}>
-				<View>
-					<StatusBar
-						backgroundColor="#FFFFFF"
-						barStyle="dark-content"
-					/>
-					<NavigationContainer>
-						<Stack.Navigator initialRouteName="Login">
-							{loadNavigator(navigator)}
-						</Stack.Navigator>
-					</NavigationContainer>
-				</View>
+				<StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+				<NavigationContainer>
+					<Stack.Navigator initialRouteName="Home">
+						{loadNavigator(navigator)}
+					</Stack.Navigator>
+				</NavigationContainer>
 			</PersistGate>
 		</Provider>
 	);

@@ -2,7 +2,8 @@ import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import UserScreen from './UserScreen';
-import WellcomeScreen from './WellcomeScreem';
+import WellcomeScreen from './WellcomeScreen';
+import ChatScreen from './ChatScreen';
 
 const navigator = [
 	{
@@ -16,19 +17,24 @@ const navigator = [
 		options: { headerShown: false },
 	},
 	{
-		name: 'Profile',
+		name: 'User',
 		component: UserScreen,
-		options: { headerShown: false },
+		// options: { headerShown: false },
+	},
+	{
+		name: 'Chat',
+		component: ChatScreen,
+		// options: { headerShown: false },
 	},
 	{
 		name: 'Login',
 		component: LoginScreen,
-		options: { headerShown: false },
+		// options: { headerShown: false },
 	},
 	{
 		name: 'Register',
 		component: RegisterScreen,
-		options: { headerShown: false },
+		// options: { headerShown: false },
 	},
 ];
 

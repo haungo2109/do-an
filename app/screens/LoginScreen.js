@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
 	ImageBackground,
@@ -8,14 +8,13 @@ import {
 	ButtonLink,
 	TextLink,
 	SmallText,
-} from './WellcomeScreem';
+} from './WellcomeScreen';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
-import userApi from '../api/userApi';
 import converObjToFormData from '../utils/ObjectToFormData';
 import { client_id, client_secret } from '../api/apiClient';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../redux/reducers/authReducer';
+import { loginAction } from '../redux/reducers/authReducer';
 
 const WapperInput = styled.View`
 	width: 75%;
@@ -60,20 +59,26 @@ function LoginScreen({ navigation }, props) {
 	const [username, setUsername] = useState('haungo1');
 	const [password, setPassword] = useState('123456');
 	const dispatch = useDispatch();
-    const { error } = useSelector((state) => state.auth);
+	const { error, data, loading } = useSelector((state) => state.auth);
 
 	const handleLogin = () => {
-		// let data = converObjToFormData({ username, password, client_secret, client_id });
-		let data = new FormData();
-		data.append('username', username);
-		data.append('password', password);
-		data.append('client_id', client_id);
-		data.append('client_secret', client_secret);
-		data.append('grant_type', 'password');
-        
-        dispatch(login(data));
+		// let formData = converObjToFormData({ username, password, client_secret, client_id });
+		let formData = new FormData();
+		formData.append('username', username);
+		formData.append('password', password);
+		formData.append('client_id', client_id);
+		formData.append('client_secret', client_secret);
+		formData.append('grant_type', 'password');
+
+		dispatch(loginAction(formData));
 	};
+
+	useEffect(() => {
+		if (data?.access_token) navigation.navigate('Home');
+	}, [data]);
+
 	const handleSetPassword = () => {};
+    
 	return (
 		<ImageBackground source={require('./../assets/story2.jpg')}>
 			<Container>
@@ -82,6 +87,9 @@ function LoginScreen({ navigation }, props) {
 				</Logo>
 				<GroupButton colors={['rgba(2,0,36,0)', 'rgba(10,9,15,1)']}>
 					<ErrorText>{error}</ErrorText>
+					{loading && (
+						<ActivityIndicator size="small" color="white" />
+					)}
 					<WapperInput>
 						<Icon>
 							<FontAwesome

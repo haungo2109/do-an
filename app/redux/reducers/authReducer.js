@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userApi from '../../api/userApi';
 
-export const login = createAsyncThunk(
-	'users/fetchByIdStatus',
+export const loginAction = createAsyncThunk(
+	'auth/getToken',
 	async (data, thunkAPI) => {
 		const response = await userApi.login(data);
 		return response;
@@ -11,21 +11,27 @@ export const login = createAsyncThunk(
 
 const authSlice = createSlice({
 	name: 'auth',
-	initialState: { error: '', data: {} },
-	reducers: {
-		setAuth(state, action) {
-			state = action.payload;
-		},
-	},
+	initialState: { error: '', data: {}, loading: false },
+	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(login.fulfilled, (state, action) => {
-			state = Object.assign(state, { data: action.payload });
+		builder.addCase(loginAction.fulfilled, (state, action) => {
+			state = Object.assign(state, {
+				data: action.payload,
+				loading: false,
+			});
 		});
-		builder.addCase(login.rejected, (state, action) => {
-			state = Object.assign(state, { error: action.payload });
+		builder.addCase(loginAction.rejected, (state, action) => {
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknown error.',
+				loading: false,
+			});
+		});
+		builder.addCase(loginAction.pending, (state) => {
+			state = Object.assign(state, {
+				loading: true,
+			});
 		});
 	},
 });
 
-export const { setAuth } = authSlice.actions;
 export default authSlice.reducer;

@@ -8,7 +8,7 @@ import {
 	ButtonLink,
 	TextLink,
 	SmallText,
-} from './WellcomeScreem';
+} from './WellcomeScreen';
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 

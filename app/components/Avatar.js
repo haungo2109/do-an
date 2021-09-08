@@ -1,19 +1,19 @@
-import React from 'react'
+import { useNavigation } from '@react-navigation/core';
+import React from 'react';
 
-import styled from 'styled-components/native'
+import styled from 'styled-components/native';
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
 	width: 40px;
 	height: 40px;
 	position: relative;
-`
-const User = styled.Image`
+`;
+const UserImage = styled.Image`
 	width: 40px;
 	height: 40px;
 	border-radius: 20px;
 	border-color: #1777f2;
-	border-width: ${props => (props.story ? '3px' : 0)};
-`
+`;
 const UserActive = styled.View`
 	width: 15px;
 	height: 15px;
@@ -24,15 +24,21 @@ const UserActive = styled.View`
 	right: -2px;
 	border-width: 2px;
 	border-color: #ffffff;
-`
+`;
 
-const Avatar = ({ source, online, story }) => {
+const AvatarToProfile = ({ source, online, story, user_id }) => {
+	const navigation = useNavigation();
+
+	const handlePress = () => {
+		navigation.navigate('User', { user_id });
+	};
+
 	return (
-		<Container>
-			<User source={source} story={story} />
+		<Container onPress={handlePress}>
+			<UserImage source={source} story={story} />
 			{online && <UserActive />}
 		</Container>
-	)
-}
+	);
+};
 
-export default Avatar
+export default AvatarToProfile;

@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import Avatar from './Avatar'
+import AvatarToProfile from './Avatar'
 
 const Container = styled.View`
 	width: 100%;
@@ -48,34 +48,32 @@ const Users = () => {
 					showsHorizontalScrollIndicator={false}
 					style={{ paddingLeft: 11 }}
 				>
-					<Room>
-						<MaterialCommunityIcons
-							name="video-plus"
-							size={26}
-							color="#E141FC"
-						/>
-						<Text>Create{'\n'}Room</Text>
-					</Room>
 					<User>
-						<Avatar
+						<AvatarToProfile
 							source={require('../assets/user2.jpg')}
 							online={true}
 						/>
 					</User>
 					<User>
-						<Avatar
+						<AvatarToProfile
 							source={require('../assets/user3.jpg')}
 							online={true}
 						/>
 					</User>
 					<User>
-						<Avatar source={require('../assets/user4.jpg')} />
+						<AvatarToProfile source={require('../assets/user4.jpg')} />
 					</User>
 					<User>
-						<Avatar source={require('../assets/user5.jpg')} />
+						<AvatarToProfile source={require('../assets/user5.jpg')} />
 					</User>
 					<User>
-						<Avatar source={require('../assets/user3.jpg')} />
+						<AvatarToProfile source={require('../assets/user3.jpg')} />
+					</User>
+					<User>
+						<AvatarToProfile source={require('../assets/user3.jpg')} />
+					</User>
+					<User>
+						<AvatarToProfile source={require('../assets/user3.jpg')} />
 					</User>
 				</ScrollView>
 			</Container>
