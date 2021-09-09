@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components/native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { baseURL } from '../api/apiClient';
 import { useDispatch } from 'react-redux';
 import { dislikePost, likePost } from '../redux/reducers/postReducer';
 import Colors from '../config/Colors';
+import Font from '../config/Font';
 
 const Container = styled.View`
 	flex: 1;
@@ -26,25 +27,27 @@ const Row = styled.View`
 	flex-direction: row;
 `;
 const User = styled.Text`
-	font-size: 12px;
+	font-size: ${Font.big};
 	font-weight: bold;
-	color: #222121;
+	color: ${Colors.gray8};
 `;
 const Time = styled.Text`
-	font-size: 9px;
-	color: #747476;
+	font-size: ${Font.small};
+	color: ${Colors.gray5};
 `;
 const Post = styled.Text`
-	font-size: 12px;
-	color: #222121;
-	line-height: 16px;
+	font-size: ${Font.nomal};
+	color: ${Colors.gray7};
+	line-height: 20px;
 	padding: 0 11px;
+	margin: 3px 0;
 `;
 const TextHashTag = styled(Post)`
 	background-color: ${Colors.gray2};
 	margin-left: 11px;
-    padding: 0 2px;
-    border-radius: 3px;
+	margin-top: 2px;
+	padding: 0 2px;
+	border-radius: 3px;
 `;
 const WrapperTextHashTag = styled.View`
 	flex-direction: row;
@@ -77,10 +80,6 @@ const IconCount = styled.View`
 	justify-content: center;
 	margin-right: 6px;
 `;
-const TextCount = styled.Text`
-	font-size: 11px;
-	color: #424040;
-`;
 const Separator = styled.View`
 	width: 100%;
 	height: 1px;
@@ -101,9 +100,14 @@ const Icon = styled.View`
 	margin-right: 6px;
 `;
 const Text = styled.Text`
-	font-size: 12px;
-	color: #424040;
+	font-size: ${Font.small};
+	color: ${Colors.gray7};
 `;
+const ButtonMenu = styled.TouchableOpacity`
+	padding: 7px;
+	border-radius: 5px;
+`;
+
 const Feed = ({
 	content,
 	create_at,
@@ -113,12 +117,14 @@ const Feed = ({
 	post_images,
 	user,
 	vote,
+	handlePressMenu,
 }) => {
 	const dispatch = useDispatch();
 
 	const handleLikeButton = () => {
 		dispatch(likePost(id));
 	};
+
 	const handleDislikeButton = () => {
 		dispatch(dislikePost(id));
 	};
@@ -145,12 +151,13 @@ const Feed = ({
 						</Row>
 					</View>
 				</Row>
-
-				<Entypo
-					name="dots-three-horizontal"
-					size={15}
-					color="#222121"
-				/>
+				<ButtonMenu onPress={() => handlePressMenu(user.id, id)}>
+					<Entypo
+						name="dots-three-horizontal"
+						size={15}
+						color="#222121"
+					/>
+				</ButtonMenu>
 			</Header>
 
 			<Post>{content}</Post>

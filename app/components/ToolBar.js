@@ -1,16 +1,17 @@
 import React from 'react';
-
 import styled from 'styled-components/native';
-
 import {
 	Ionicons,
+	Feather,
 	MaterialIcons,
 	MaterialCommunityIcons,
 } from '@expo/vector-icons';
 
 import AvatarToProfile from './Avatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { baseURL } from '../api/apiClient';
+import useModelEdit from '../hooks/useModelEdit';
+import Colors from '../config/Colors';
 
 const Container = styled.View`
 	width: 100%;
@@ -18,7 +19,7 @@ const Container = styled.View`
 `;
 const Row = styled.View`
 	flex-direction: row;
-	background: #ffffff;
+	background: ${Colors.gray};
 	width: 100%;
 	padding: 0 11px;
 	align-items: center;
@@ -55,9 +56,14 @@ const BottomDivider = styled.View`
 	height: 9px;
 	background: #f0f2f5;
 `;
+const ButtonType = styled.TouchableOpacity`
+	flex: 1;
+`;
 
 const ToolBar = () => {
 	const user = useSelector((state) => state.user);
+	const { showModelEdit } = useModelEdit('Tạo bài đăng');
+
 	if (!user) {
 		<></>;
 	} else
@@ -65,38 +71,45 @@ const ToolBar = () => {
 			<>
 				<Container>
 					<Row>
-						<AvatarToProfile source={{uri: baseURL + user.avatar}} />
-						<Input placeholder="What's on your mind?" />
+						<AvatarToProfile
+							source={{ uri: baseURL + user.avatar }}
+						/>
+						<ButtonType onPress={() => showModelEdit()}>
+							<Input
+								editable={false}
+								placeholder="Bạn đang nghĩ gì nào?"
+							/>
+						</ButtonType>
 					</Row>
 					<Divider />
 					<Row>
-						<Menu>
-							<Ionicons
-								name="ios-videocam"
-								size={22}
-								color="#F44337"
-							/>
-							<MenuText>Live</MenuText>
-						</Menu>
-						<Separator />
-
 						<Menu>
 							<MaterialIcons
 								name="photo-size-select-actual"
 								size={20}
 								color="#4CAF50"
 							/>
-							<MenuText>Photo</MenuText>
+							<MenuText>Hình ảnh</MenuText>
 						</Menu>
 						<Separator />
 
 						<Menu>
-							<MaterialCommunityIcons
-								name="video-plus"
+							<MaterialIcons
+								name="insert-emoticon"
 								size={22}
-								color="#E141FC"
+								color={Colors.yellow4}
 							/>
-							<MenuText>Room</MenuText>
+							<MenuText>Cảm xúc</MenuText>
+						</Menu>
+						<Separator />
+
+						<Menu>
+							<Feather
+								name="hash"
+								size={22}
+								color={Colors.yellow7}
+							/>
+							<MenuText>Hashtag</MenuText>
 						</Menu>
 					</Row>
 				</Container>

@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Android on Device",
+			"command": "${command:reactNative.runAndroidDevice}",
+			"problemMatcher": []
+		}
+	]
+}

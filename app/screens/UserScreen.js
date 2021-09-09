@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/native';
 import Colors from '../config/Colors';
-import { Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { Entypo, Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import ToolBar from '../components/ToolBar';
+import { useDispatch, useSelector } from 'react-redux';
+import { baseURL } from '../api/apiClient';
+import { getMyPost } from '../redux/reducers/postReducer';
+import ListFeed from '../components/ListFeed';
 
 const WrrapperAvatar = styled.View`
 	margin-top: 50px;
@@ -71,17 +75,22 @@ const ItemInfo = styled.View`
 	font-size: 15px;
 `;
 
-function UserScreen(props) {
+function UserScreen({ navigation, route }) {
+	const user = useSelector((state) => state.user);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		dispatch(getMyPost());
+	}, []);
 	return (
 		<>
 			<ContainerProfile>
 				<WrrapperAvatar>
-					<Avatar source={require('../assets/user3.jpg')} />
+					<Avatar source={{ uri: baseURL + user.avatar }} />
 					<ButtonChangeAvatar>
 						<FontAwesome name="camera" size={15} color="black" />
 					</ButtonChangeAvatar>
 				</WrrapperAvatar>
-				<TextTitle>Haungo Kan</TextTitle>
+				<TextTitle>{user.first_name + ' ' + user.last_name}</TextTitle>
 				<ButtonEditProfile>
 					<Icon>
 						<FontAwesome name="pencil" size={15} color="white" />
@@ -94,22 +103,43 @@ function UserScreen(props) {
 					<ItemInfo>
 						<Icon>
 							<FontAwesome
-								name="graduation-cap"
+								name="birthday-cake"
 								size={15}
 								color="black"
 							/>
 						</Icon>
-						<WrapperTextInfo>Đã học tại TP HCM</WrapperTextInfo>
+						<WrapperTextInfo>
+							{user.birthday || 'Chưa điền thông tin.'}
+						</WrapperTextInfo>
+					</ItemInfo>
+					<ItemInfo>
+						<Icon>
+							<Entypo name="email" size={15} color="black" />
+						</Icon>
+						<WrapperTextInfo>
+							{user.email || 'Chưa điền thông tin.'}
+						</WrapperTextInfo>
+					</ItemInfo>
+					<ItemInfo>
+						<Icon>
+							<FontAwesome name="phone" size={15} color="black" />
+						</Icon>
+						<WrapperTextInfo>
+							{user.phone || 'Chưa điền thông tin.'}
+						</WrapperTextInfo>
 					</ItemInfo>
 					<ItemInfo>
 						<Icon>
 							<FontAwesome5 name="home" size={15} color="black" />
 						</Icon>
-						<WrapperTextInfo>Đến từ Bình Phước</WrapperTextInfo>
+						<WrapperTextInfo>
+							{user.address || 'Chưa điền thông tin.'}
+						</WrapperTextInfo>
 					</ItemInfo>
 				</WrapperInfo>
 			</ContainerProfile>
 			<ToolBar />
+			<ListFeed />
 		</>
 	);
 }

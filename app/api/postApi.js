@@ -1,4 +1,4 @@
-import api from 'api/apiClient';
+import api from './apiClient';
 
 const config = {
 	headers: {
@@ -20,11 +20,11 @@ const postApi = {
 		return api.get(url);
 	},
 	getPost: (postId) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return api.get(url);
 	},
 	getPostComment: (postId) => {
-		const url = `/post-comment/${postId}`;
+		const url = `/post-comment/${postId}/`;
 		return api.get(url);
 	},
 	/**
@@ -39,7 +39,7 @@ const postApi = {
 		return api.patch(url, data, config);
 	},
 	deletePost: (postId) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return api.delete(url, config);
 	},
 	/**

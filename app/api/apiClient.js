@@ -14,10 +14,46 @@ const api = new Axios.create({
 	// withCredentials: true,
 });
 
-const handleError = (error) => {
-	if (error.message) return Promise.reject(error.message);
+const refreshAccessToken = async () => {
+	try {
+		const refresh_token = await getData('refresh_token');
+		const form = new FormData();
+		form.append('grant_type', 'refresh_token');
+		form.append('refresh_token', refresh_token);
+		form.append('valid_for', '86400');
+		form.append('client_id', client_id);
+		form.append('client_secret', client_secret);
 
-	return Promise.reject(mess);
+		return api.post('/o/token/', form, {
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		});
+	} catch (e) {
+		return Error('Vui lòng đăng nhập lại.');
+	}
+};
+
+const handleError = (err) => {
+	if (!err?.response) return Promise.reject('Lỗi app form điền bị sai.');
+	if (err.response.status !== 401) return Promise.reject(err.message);
+
+	const originalConfig = err.config;
+
+	if (originalConfig.url !== '/o/token/' && err.response) {
+		if (err.response.status === 401 && !originalConfig._retry) {
+			originalConfig._retry = true;
+
+			try {
+				refreshAccessToken().then(() => {
+					api(originalConfig);
+				});
+			} catch (_error) {
+				return Promise.reject(_error);
+			}
+		}
+	}
+	return Promise.reject(err);
 };
 
 api.interceptors.request.use(async function (config) {
@@ -26,16 +62,15 @@ api.interceptors.request.use(async function (config) {
 	return config;
 }, handleError);
 
-api.interceptors.response.use(function (res) {
-    // debugger;
+api.interceptors.response.use(async function (res) {
 	if (res?.data?.access_token) {
-		setData('Authorization', `Bearer ${res?.data?.access_token}`);
-		setData('refresh_token', res?.data?.refresh_token);
+		await setData('Authorization', `Bearer ${res?.data?.access_token}`);
+		await setData('refresh_token', res?.data?.refresh_token);
 	}
 	if (res?.data) {
 		return res.data;
 	}
-
+	if (res.status == 204) return null;
 	return res;
 }, handleError);
 

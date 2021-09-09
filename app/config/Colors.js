@@ -10,6 +10,7 @@ const Colors = {
 	gray7: '#374151',
 	gray8: '#1F2937',
 	gray9: '#111827',
+	gray6o5: 'rgba(75, 85, 99, 0.48)',
 	red: '#FEF2F2',
 	red1: '#FEE2E2',
 	red2: '#FECACA',

@@ -8,6 +8,24 @@ export const getAllPostAction = createAsyncThunk(
 		return response;
 	}
 );
+export const getMyPost = createAsyncThunk('post/fetchMyPost', async () => {
+	const response = await postApi.getPostOwner();
+	return response;
+});
+export const postPostAction = createAsyncThunk(
+	'post/postPost',
+	async (data) => {
+		const response = await postApi.postPost(data);
+		return response;
+	}
+);
+export const deletePostAction = createAsyncThunk(
+	'post/deletePost',
+	async (id) => {
+		const response = await postApi.deletePost(id);
+		return response;
+	}
+);
 
 export const likePost = createAsyncThunk('post/like', async (postId) => {
 	const response = await postApi.increatePostVote(postId);
@@ -37,6 +55,13 @@ const postSlice = createSlice({
 				error: '',
 			});
 		});
+		builder.addCase(getMyPost.fulfilled, (state, action) => {
+			state = Object.assign(state, {
+				data: action.payload,
+				loading: false,
+				error: '',
+			});
+		});
 		builder.addCase(getAllPostAction.rejected, (state, action) => {
 			state = Object.assign(state, {
 				error: action.error.message || 'Unknown error.',
@@ -44,6 +69,17 @@ const postSlice = createSlice({
 			});
 		});
 		builder.addCase(getAllPostAction.pending, (state, action) => {
+			state = Object.assign(state, {
+				loading: true,
+			});
+		});
+		builder.addCase(getMyPost.rejected, (state, action) => {
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknown error.',
+				loading: false,
+			});
+		});
+		builder.addCase(getMyPost.pending, (state, action) => {
 			state = Object.assign(state, {
 				loading: true,
 			});
@@ -61,6 +97,34 @@ const postSlice = createSlice({
 				c.id != data['id'] ? c : data
 			);
 			state = Object.assign(state, { data: newState });
+		});
+		builder.addCase(deletePostAction.fulfilled, (state, action) => {
+			let id = action.meta.arg;
+			let newState = state.data.filter((c) => c.id !== id);
+			state = Object.assign(state, { data: newState });
+		});
+		builder.addCase(deletePostAction.rejected, (state, action) => {
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknow error',
+			});
+		});
+		builder.addCase(postPostAction.fulfilled, (state, action) => {
+			let post = action.payload;
+			state = Object.assign(state, {
+				data: [...state.data, post],
+				error: '',
+				loading: false,
+			});
+		});
+		builder.addCase(postPostAction.rejected, (state, action) => {
+			console.log('Rejected Action post Post', action);
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknow error',
+				loading: false,
+			});
+		});
+		builder.addCase(postPostAction.pending, (state, action) => {
+			state = Object.assign(state, { loading: true });
 		});
 	},
 });
