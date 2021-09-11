@@ -121,7 +121,7 @@ const ImageInput = ({ photo, setPhoto }) => {
 				<ButtonAddImage onPress={() => setModalVisible(true)}>
 					<AntDesign name="plus" size={24} color="black" />
 				</ButtonAddImage>
-				{photo?.length &&
+				{photo !== undefined &&
 					photo.map((c, i) => (
 						<WrapperImage key={i}>
 							<Photo

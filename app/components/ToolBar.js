@@ -74,7 +74,23 @@ const ToolBar = () => {
 						<AvatarToProfile
 							source={{ uri: baseURL + user.avatar }}
 						/>
-						<ButtonType onPress={() => showModelEdit()}>
+						<ButtonType
+							onPress={() =>
+								showModelEdit({
+									listChoose: [
+										'content',
+										'hashtag',
+										'images',
+									],
+									handleSubmit: 'addPost',
+									data: {
+										content: '',
+										hashtag: '',
+										post_images: [],
+									},
+								})
+							}
+						>
 							<Input
 								editable={false}
 								placeholder="Bạn đang nghĩ gì nào?"

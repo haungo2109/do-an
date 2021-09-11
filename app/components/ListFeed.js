@@ -17,9 +17,14 @@ function ListFeed(props) {
 	const { data, error, loading } = useSelector((state) => state.post);
 	const { showModelMenu } = useModelMenu();
 
-	const handlePressMenu = (uid, postId) => {
-		if (user.id === uid) showModelMenu(postId, ['edit', 'delete']);
-		else showModelMenu(postId, ['report']);
+	const handlePressMenu = (uid, post) => {
+		if (user.id === uid)
+			showModelMenu({
+				id: post.id,
+				listChoose: ['edit', 'delete'],
+				data: post,
+			});
+		else showModelMenu({ id: post.id, listChoose: ['report'], data: post });
 	};
 	const checkLiked = (like = []) => {
 		if (user) {

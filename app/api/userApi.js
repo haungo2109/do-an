@@ -44,5 +44,9 @@ const userApi = {
 		const url = `/user/current-user/`;
 		return api.get(url);
 	},
+	updateCurrentUserInfo: (id, data) => {
+		const url = `/user/${id}/`;
+		return api.patch(url, data);
+	},
 };
 export default userApi;

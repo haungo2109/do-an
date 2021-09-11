@@ -1,26 +1,16 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-	setControllerEdit,
-	setDataEditPost,
-} from '../redux/reducers/controllerReducer';
+import { setControllerEdit } from '../redux/reducers/controllerReducer';
 
 function useModelEdit(title) {
 	const dispatch = useDispatch();
 
-	const showModelEdit = (
-		listChoose = ['content', 'hashtag', 'images'],
-		id = 0
-	) => {
-		let payload = { show: true, listChoose, id };
+	const showModelEdit = (data) => {
+		let payload = { ...data, show: true };
 		if (title) {
 			payload['title'] = title;
 		}
 		dispatch(setControllerEdit(payload));
-	};
-
-	const addDataEdit = (id) => {
-		dispatch(setDataEditPost(id));
 	};
 
 	const hiddenModelEdit = () => {
@@ -30,7 +20,6 @@ function useModelEdit(title) {
 	return {
 		hiddenModelEdit,
 		showModelEdit,
-		addDataEdit,
 	};
 }
 

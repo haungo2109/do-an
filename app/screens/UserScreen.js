@@ -7,9 +7,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { baseURL } from '../api/apiClient';
 import { getMyPost } from '../redux/reducers/postReducer';
 import ListFeed from '../components/ListFeed';
+import { ScrollView } from 'react-native';
+import useModelEdit from '../hooks/useModelEdit';
 
+const Container = styled.SafeAreaView`
+	flex: 1;
+`;
 const WrrapperAvatar = styled.View`
-	margin-top: 50px;
+	margin-top: 10px;
 	width: 150px;
 	height: 150px;
 	border-radius: 200px;
@@ -75,72 +80,109 @@ const ItemInfo = styled.View`
 	font-size: 15px;
 `;
 
-function UserScreen({ navigation, route }) {
+function UserScreen() {
 	const user = useSelector((state) => state.user);
 	const dispatch = useDispatch();
+	const { showModelEdit, setHandleSubmit } = useModelEdit(
+		'Chỉnh sửa thông tin cá nhân'
+	);
+
 	useEffect(() => {
 		dispatch(getMyPost());
 	}, []);
+
+	const handleSubmit = (data) => {
+		console.log('ahihilala', data);
+	};
+
 	return (
-		<>
-			<ContainerProfile>
-				<WrrapperAvatar>
-					<Avatar source={{ uri: baseURL + user.avatar }} />
-					<ButtonChangeAvatar>
-						<FontAwesome name="camera" size={15} color="black" />
-					</ButtonChangeAvatar>
-				</WrrapperAvatar>
-				<TextTitle>{user.first_name + ' ' + user.last_name}</TextTitle>
-				<ButtonEditProfile>
-					<Icon>
-						<FontAwesome name="pencil" size={15} color="white" />
-					</Icon>
-					<TextButtonEditProfile>
-						Chỉnh sửa thông tin cá nhân
-					</TextButtonEditProfile>
-				</ButtonEditProfile>
-				<WrapperInfo>
-					<ItemInfo>
-						<Icon>
+		<Container>
+			<ScrollView>
+				<ContainerProfile>
+					<WrrapperAvatar>
+						<Avatar source={{ uri: baseURL + user.avatar }} />
+						<ButtonChangeAvatar>
 							<FontAwesome
-								name="birthday-cake"
+								name="camera"
 								size={15}
 								color="black"
 							/>
-						</Icon>
-						<WrapperTextInfo>
-							{user.birthday || 'Chưa điền thông tin.'}
-						</WrapperTextInfo>
-					</ItemInfo>
-					<ItemInfo>
+						</ButtonChangeAvatar>
+					</WrrapperAvatar>
+					<TextTitle>
+						{user.first_name + ' ' + user.last_name}
+					</TextTitle>
+					<ButtonEditProfile
+						onPress={() => {
+							showModelEdit({
+								id: user.id,
+								data: { ...user },
+								handleSubmit: 'editProfile',
+							});
+						}}
+					>
 						<Icon>
-							<Entypo name="email" size={15} color="black" />
+							<FontAwesome
+								name="pencil"
+								size={15}
+								color="white"
+							/>
 						</Icon>
-						<WrapperTextInfo>
-							{user.email || 'Chưa điền thông tin.'}
-						</WrapperTextInfo>
-					</ItemInfo>
-					<ItemInfo>
-						<Icon>
-							<FontAwesome name="phone" size={15} color="black" />
-						</Icon>
-						<WrapperTextInfo>
-							{user.phone || 'Chưa điền thông tin.'}
-						</WrapperTextInfo>
-					</ItemInfo>
-					<ItemInfo>
-						<Icon>
-							<FontAwesome5 name="home" size={15} color="black" />
-						</Icon>
-						<WrapperTextInfo>
-							{user.address || 'Chưa điền thông tin.'}
-						</WrapperTextInfo>
-					</ItemInfo>
-				</WrapperInfo>
-			</ContainerProfile>
-			<ToolBar />
-			<ListFeed />
-		</>
+						<TextButtonEditProfile>
+							Chỉnh sửa thông tin cá nhân
+						</TextButtonEditProfile>
+					</ButtonEditProfile>
+					<WrapperInfo>
+						<ItemInfo>
+							<Icon>
+								<FontAwesome
+									name="birthday-cake"
+									size={15}
+									color="black"
+								/>
+							</Icon>
+							<WrapperTextInfo>
+								{user.birthday || 'Chưa điền thông tin.'}
+							</WrapperTextInfo>
+						</ItemInfo>
+						<ItemInfo>
+							<Icon>
+								<Entypo name="email" size={15} color="black" />
+							</Icon>
+							<WrapperTextInfo>
+								{user.email || 'Chưa điền thông tin.'}
+							</WrapperTextInfo>
+						</ItemInfo>
+						<ItemInfo>
+							<Icon>
+								<FontAwesome
+									name="phone"
+									size={15}
+									color="black"
+								/>
+							</Icon>
+							<WrapperTextInfo>
+								{user.phone || 'Chưa điền thông tin.'}
+							</WrapperTextInfo>
+						</ItemInfo>
+						<ItemInfo>
+							<Icon>
+								<FontAwesome5
+									name="home"
+									size={15}
+									color="black"
+								/>
+							</Icon>
+							<WrapperTextInfo>
+								{user.address || 'Chưa điền thông tin.'}
+							</WrapperTextInfo>
+						</ItemInfo>
+					</WrapperInfo>
+				</ContainerProfile>
+				<ToolBar />
+				<ListFeed />
+			</ScrollView>
+		</Container>
 	);
 }
 

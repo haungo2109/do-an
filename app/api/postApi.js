@@ -35,7 +35,7 @@ const postApi = {
 	 * @returns Promise
 	 */
 	patchPost: (postId, data) => {
-		const url = `/post/${postId}`;
+		const url = `/post/${postId}/`;
 		return api.patch(url, data, config);
 	},
 	deletePost: (postId) => {

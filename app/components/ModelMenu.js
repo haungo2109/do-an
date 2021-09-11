@@ -12,6 +12,7 @@ import { setControllerMenu } from '../redux/reducers/controllerReducer';
 import { deletePostAction } from '../redux/reducers/postReducer';
 import useModelEdit from '../hooks/useModelEdit';
 import useModelMenu from '../hooks/useModelMenu';
+import { baseURL } from '../api/apiClient';
 
 const ViewCheckEven = styled.TouchableWithoutFeedback`
 	flex: 1;
@@ -51,10 +52,10 @@ const Button = styled.TouchableOpacity`
 
 const ModelMenu = () => {
 	const dispatch = useDispatch();
-	const { showModelEdit, addDataEdit } = useModelEdit('Chỉnh sửa bài viết');
+	const { showModelEdit } = useModelEdit('Chỉnh sửa bài viết');
 	const { hiddenModelMenu } = useModelMenu();
 
-	const { id, show, listChoose } = useSelector(
+	const { id, show, listChoose, data } = useSelector(
 		(state) => state.controller.menuPost
 	);
 
@@ -64,8 +65,24 @@ const ModelMenu = () => {
 			text: 'Chỉnh sửa bài viết',
 			handle: () => {
 				hiddenModelMenu();
-				showModelEdit();
-				addDataEdit(id);
+				let newData = Object.assign(data, {});
+				let hashtag = '';
+				let post_images = [];
+
+				if (newData?.hashtag) {
+					hashtag = newData.hashtag.map((c) => c.name).join(',');
+				}
+				if (newData?.post_images) {
+					post_images = newData.post_images.map((c) => ({
+						uri: baseURL + c,
+					}));
+				}
+				showModelEdit({
+					listChoose: ['content', 'hashtag', 'images'],
+					id,
+					handleSubmit: 'editPost',
+					data: { ...newData, hashtag, post_images },
+				});
 			},
 		},
 		delete: {

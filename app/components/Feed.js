@@ -151,7 +151,16 @@ const Feed = ({
 						</Row>
 					</View>
 				</Row>
-				<ButtonMenu onPress={() => handlePressMenu(user.id, id)}>
+				<ButtonMenu
+					onPress={() =>
+						handlePressMenu(user.id, {
+							content,
+							hashtag,
+							id,
+							post_images,
+						})
+					}
+				>
 					<Entypo
 						name="dots-three-horizontal"
 						size={15}

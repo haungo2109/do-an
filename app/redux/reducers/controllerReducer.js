@@ -16,6 +16,7 @@ const controllerSlice = createSlice({
 			id: 0,
 			show: false,
 			listChoose: ['edit', 'delete', 'report'],
+			data: {},
 		},
 		editPost: {
 			id: 0,
@@ -23,6 +24,7 @@ const controllerSlice = createSlice({
 			listChoose: ['content', 'hashtag', 'images'],
 			title: 'Chỉnh sửa bài đăng',
 			data: {},
+			handleSubmit: '',
 		},
 	},
 	reducers: {

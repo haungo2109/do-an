@@ -12,6 +12,13 @@ export const getMyPost = createAsyncThunk('post/fetchMyPost', async () => {
 	const response = await postApi.getPostOwner();
 	return response;
 });
+export const updatePost = createAsyncThunk(
+	'post/updatePost',
+	async ({ id, data }) => {
+		const response = await postApi.patchPost(id, data);
+		return response;
+	}
+);
 export const postPostAction = createAsyncThunk(
 	'post/postPost',
 	async (data) => {
@@ -124,6 +131,27 @@ const postSlice = createSlice({
 			});
 		});
 		builder.addCase(postPostAction.pending, (state, action) => {
+			state = Object.assign(state, { loading: true });
+		});
+		builder.addCase(updatePost.fulfilled, (state, action) => {
+			let data = action.payload;
+			let newState = state.data.map((c) =>
+				c.id != data['id'] ? c : data
+			);
+			state = Object.assign(state, {
+				data: newState,
+				error: '',
+				loading: false,
+			});
+		});
+		builder.addCase(updatePost.rejected, (state, action) => {
+			console.log('Rejected Action edit Post', action);
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknow error',
+				loading: false,
+			});
+		});
+		builder.addCase(updatePost.pending, (state, action) => {
 			state = Object.assign(state, { loading: true });
 		});
 	},

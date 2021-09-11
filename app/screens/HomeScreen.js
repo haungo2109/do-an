@@ -8,20 +8,11 @@ import styled from 'styled-components/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCurrenUserAction } from '../redux/reducers/userReducer';
 import { getAllPostAction } from '../redux/reducers/postReducer';
-import ModelMenu from '../components/ModelMenu';
-import ModelEdit from '../components/ModelEdit';
 
 const Container = styled.SafeAreaView`
 	flex: 1;
 `;
-const WrapperModel = styled.View`
-	flex: 1;
-	top: 0;
-	left: 0;
-	position: absolute;
-	height: 100%;
-	width: 100%;
-`;
+
 function HomeScreen(props) {
 	const [refreshing, setRefreshing] = useState(false);
 	const dispatch = useDispatch();
@@ -55,10 +46,6 @@ function HomeScreen(props) {
 					<ListFeed />
 				</ScrollView>
 			</Container>
-			<WrapperModel>
-				<ModelMenu />
-				<ModelEdit />
-			</WrapperModel>
 		</>
 	);
 }

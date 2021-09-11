@@ -5,18 +5,14 @@ import { setControllerMenu } from '../redux/reducers/controllerReducer';
 function useModelMenu() {
 	const dispatch = useDispatch();
 
-	const showModelMenu = (id, listChoose) => {
-		dispatch(
-			setControllerMenu({
-				show: true,
-				id,
-				listChoose,
-			})
-		);
+	const showModelMenu = (
+		data = { id: 0, data: {}, listChoose: ['edit', 'delete', 'report'] }
+	) => {
+		dispatch(setControllerMenu({ ...data, show: true }));
 	};
 
 	const hiddenModelMenu = () => {
-		dispatch(setControllerMenu({ show: false }));
+		dispatch(setControllerMenu({ show: false, data: {} }));
 	};
 
 	return {
