@@ -24,7 +24,7 @@ const postApi = {
 		return api.get(url);
 	},
 	getPostComment: (postId) => {
-		const url = `/post-comment/${postId}/`;
+		const url = `/post-comments/${postId}/`;
 		return api.get(url);
 	},
 	/**

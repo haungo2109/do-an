@@ -4,6 +4,7 @@ import RegisterScreen from './RegisterScreen';
 import UserScreen from './UserScreen';
 import WellcomeScreen from './WellcomeScreen';
 import ChatScreen from './ChatScreen';
+import PostDetailScreen from './PostDetailScreen';
 
 const navigator = [
 	{
@@ -34,6 +35,11 @@ const navigator = [
 	{
 		name: 'Register',
 		component: RegisterScreen,
+		// options: { headerShown: false },
+	},
+	{
+		name: 'PostDetail',
+		component: PostDetailScreen,
 		// options: { headerShown: false },
 	},
 ];

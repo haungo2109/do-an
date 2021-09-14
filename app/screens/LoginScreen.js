@@ -14,7 +14,7 @@ import styled from 'styled-components/native';
 import converObjToFormData from '../utils/ObjectToFormData';
 import { client_id, client_secret } from '../api/apiClient';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginAction } from '../redux/reducers/authReducer';
+import { loginAction } from '../redux/actions';
 
 const WapperInput = styled.View`
 	width: 75%;
@@ -59,7 +59,6 @@ function LoginScreen({ navigation }, props) {
 	const [username, setUsername] = useState('haungo1');
 	const [password, setPassword] = useState('123456');
 	const dispatch = useDispatch();
-	const { error, data, loading } = useSelector((state) => state.auth);
 
 	const handleLogin = () => {
 		// let formData = converObjToFormData({ username, password, client_secret, client_id });
@@ -70,15 +69,13 @@ function LoginScreen({ navigation }, props) {
 		formData.append('client_secret', client_secret);
 		formData.append('grant_type', 'password');
 
-		dispatch(loginAction(formData));
+		dispatch(loginAction(formData)).then(() => {
+			navigation.navigate('Home');
+		});
 	};
 
-	useEffect(() => {
-		if (data?.access_token) navigation.navigate('Home');
-	}, [data]);
-
 	const handleSetPassword = () => {};
-    
+
 	return (
 		<ImageBackground source={require('./../assets/story2.jpg')}>
 			<Container>
@@ -86,10 +83,10 @@ function LoginScreen({ navigation }, props) {
 					<Text>RegsterScreen view ahihi</Text>
 				</Logo>
 				<GroupButton colors={['rgba(2,0,36,0)', 'rgba(10,9,15,1)']}>
-					<ErrorText>{error}</ErrorText>
-					{loading && (
+					{/* <ErrorText>{error}</ErrorText> */}
+					{/* {loading && (
 						<ActivityIndicator size="small" color="white" />
-					)}
+					)} */}
 					<WapperInput>
 						<Icon>
 							<FontAwesome

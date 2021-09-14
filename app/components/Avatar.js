@@ -26,7 +26,7 @@ const UserActive = styled.View`
 	border-color: #ffffff;
 `;
 
-const AvatarToProfile = ({ source, online, story, user_id }) => {
+const AvatarToProfile = ({ source, online, story = false, user_id }) => {
 	const navigation = useNavigation();
 
 	const handlePress = () => {

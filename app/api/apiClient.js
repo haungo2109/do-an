@@ -15,6 +15,7 @@ const api = new Axios.create({
 });
 
 const refreshAccessToken = async () => {
+	console.log('run get refreshToken');
 	try {
 		const refresh_token = await getData('refresh_token');
 		const form = new FormData();
@@ -35,6 +36,7 @@ const refreshAccessToken = async () => {
 };
 
 const handleError = (err) => {
+	console.log('handle error');
 	if (!err?.response) return Promise.reject('Lỗi app form điền bị sai.');
 	if (err.response.status !== 401) return Promise.reject(err.message);
 

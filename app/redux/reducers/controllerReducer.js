@@ -26,6 +26,12 @@ const controllerSlice = createSlice({
 			data: {},
 			handleSubmit: '',
 		},
+		imageSelection: {
+			show: false,
+			images: null,
+			min: 1,
+			max: 10,
+		},
 	},
 	reducers: {
 		setControllerMenu(state, action) {
@@ -38,10 +44,9 @@ const controllerSlice = createSlice({
 				editPost: { ...state.editPost, ...action.payload },
 			});
 		},
-		resetDataModelEdit(state, action) {
-			const data = {};
+		setControllerImageSelection(state, action) {
 			state = Object.assign(state, {
-				editPost: { ...state.editPost, data },
+				imageSelection: { ...state.imageSelection, ...action.payload },
 			});
 		},
 	},
@@ -56,6 +61,9 @@ const controllerSlice = createSlice({
 	},
 });
 
-export const { setControllerMenu, setControllerEdit, resetDataModelEdit } =
-	controllerSlice.actions;
+export const {
+	setControllerMenu,
+	setControllerEdit,
+	setControllerImageSelection,
+} = controllerSlice.actions;
 export default controllerSlice.reducer;

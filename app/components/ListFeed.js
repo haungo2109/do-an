@@ -6,6 +6,7 @@ import styled from 'styled-components/native';
 import Colors from '../config/Colors';
 import { setControllerMenu } from '../redux/reducers/controllerReducer';
 import useModelMenu from '../hooks/useModelMenu.js';
+import { useNavigation } from '@react-navigation/native';
 
 const WrapperList = styled.View`
 	background-color: ${Colors.gray2};
@@ -14,8 +15,9 @@ const WrapperList = styled.View`
 
 function ListFeed(props) {
 	const user = useSelector((state) => state.user);
-	const { data, error, loading } = useSelector((state) => state.post);
+	const { data, loading } = useSelector((state) => state.post);
 	const { showModelMenu } = useModelMenu();
+	const navigation = useNavigation();
 
 	const handlePressMenu = (uid, post) => {
 		if (user.id === uid)
@@ -32,6 +34,9 @@ function ListFeed(props) {
 		}
 		return false;
 	};
+	const navigatePostDetail = (data = {}) => {
+		navigation.navigate('PostDetail', data);
+	};
 	return (
 		<>
 			<WrapperList>
@@ -41,7 +46,8 @@ function ListFeed(props) {
 							key={c.id}
 							{...c}
 							handlePressMenu={handlePressMenu}
-							like={checkLiked(c.like)}
+							isLike={checkLiked(c.like)}
+							goPostDetail={navigatePostDetail}
 						/>
 					))}
 				{loading && <ActivityIndicator size="large" color="#0000ff" />}

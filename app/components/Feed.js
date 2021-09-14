@@ -4,10 +4,11 @@ import styled from 'styled-components/native';
 import { Entypo, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import Avatar from './Avatar';
 import { baseURL } from '../api/apiClient';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { dislikePost, likePost } from '../redux/reducers/postReducer';
 import Colors from '../config/Colors';
 import Font from '../config/Font';
+import postApi from '../api/postApi';
 
 const Container = styled.View`
 	flex: 1;
@@ -114,10 +115,12 @@ const Feed = ({
 	hashtag = [],
 	id,
 	like = false,
+	isLike,
 	post_images,
 	user,
-	vote,
+	count_comment,
 	handlePressMenu,
+	goPostDetail,
 }) => {
 	const dispatch = useDispatch();
 
@@ -193,19 +196,36 @@ const Feed = ({
 				<Separator />
 				<FooterMenu>
 					<Button
-						onPress={like ? handleDislikeButton : handleLikeButton}
+						onPress={
+							isLike ? handleDislikeButton : handleLikeButton
+						}
 					>
 						<Icon>
 							<AntDesign
 								name="like2"
 								size={20}
-								color={like ? 'blue' : '#424040'}
+								color={isLike ? 'blue' : '#424040'}
 							/>
 						</Icon>
-						<Text>{vote}</Text>
+						<Text>{like.length}</Text>
 					</Button>
 
-					<Button>
+					<Button
+						onPress={() => {
+							if (count_comment !== 0)
+								goPostDetail({
+									content,
+									create_at,
+									hashtag,
+									id,
+									like,
+									isLike,
+									post_images,
+									user,
+									count_comment,
+								});
+						}}
+					>
 						<Icon>
 							<MaterialCommunityIcons
 								name="comment-outline"
@@ -213,7 +233,7 @@ const Feed = ({
 								color="#424040"
 							/>
 						</Icon>
-						<Text>1 comment</Text>
+						<Text>{count_comment} comment</Text>
 					</Button>
 				</FooterMenu>
 			</Footer>

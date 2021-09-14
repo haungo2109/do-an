@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import styled from 'styled-components';
 import ModelEdit from './app/components/ModelEdit';
 import ModelMenu from './app/components/ModelMenu';
+import ModelImageSelection from './app/components/ModelImageSelection';
 
 const Stack = createNativeStackNavigator();
 const WrapperModel = styled.View`
@@ -39,13 +40,14 @@ export default function App() {
 			<PersistGate loading={<LoadingMarkup />} persistor={persistor}>
 				<StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
 				<NavigationContainer>
-					<Stack.Navigator initialRouteName="Home">
+					<Stack.Navigator initialRouteName="Wellcome">
 						{loadNavigator(navigator)}
 					</Stack.Navigator>
 				</NavigationContainer>
 				<WrapperModel>
 					<ModelMenu />
 					<ModelEdit />
+					<ModelImageSelection />
 				</WrapperModel>
 			</PersistGate>
 		</Provider>

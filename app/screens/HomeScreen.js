@@ -25,7 +25,13 @@ function HomeScreen(props) {
 	}, []);
 
 	useEffect(() => {
-		if (!user?.username) dispatch(getCurrenUserAction());
+		dispatch(getCurrenUserAction())
+			.then(() => {
+				console.log('get user success');
+			})
+			.catch(() => {
+				console.log('fail get user');
+			});
 		dispatch(getAllPostAction());
 	}, []);
 
