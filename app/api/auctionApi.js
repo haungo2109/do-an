@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import api from './apiClient';
 
 const config = {
 	headers: {
@@ -9,23 +9,23 @@ const config = {
 const auctionApi = {
 	getAuctions: () => {
 		const url = '/auction/';
-		return axiosClient.get(url);
+		return api.get(url);
 	},
 	postAuction: (data) => {
 		const url = '/auction/';
-		return axiosClient.post(url, data, config);
+		return api.post(url, data, config);
 	},
 	getAuctionOwner: () => {
 		const url = '/auction/owner/';
-		return axiosClient.get(url);
+		return api.get(url);
 	},
 	getAuction: (auctionId) => {
 		const url = `/auction/${auctionId}`;
-		return axiosClient.get(url);
+		return api.get(url);
 	},
 	getAuctionComment: (auctionId) => {
 		const url = `/auction-comments/${auctionId}`;
-		return axiosClient.get(url);
+		return api.get(url);
 	},
 	/**
 	 *Edit auction, user Formdata
@@ -35,11 +35,11 @@ const auctionApi = {
 	 */
 	patchAuction: (auctionId, data) => {
 		const url = `/auction/${auctionId}`;
-		return axiosClient.patch(url, data, config);
+		return api.patch(url, data, config);
 	},
 	deleteAuction: (auctionId) => {
 		const url = `/auction/${auctionId}`;
-		return axiosClient.delete(url, config);
+		return api.delete(url, config);
 	},
 	/**
 	 * Use to change state of auction comment, only th owner have permission
@@ -50,7 +50,7 @@ const auctionApi = {
 	 */
 	changeStateAuctionComment: (auctionId, commentId, stateComment) => {
 		const url = `/auction/${auctionId}/comment/${commentId}/state/${stateComment}/`;
-		return axiosClient.post(url, null, config);
+		return api.post(url, null, config);
 	},
 	/**
 	 * This use to create auction comment, If you had comment it will be overwrite
@@ -60,15 +60,15 @@ const auctionApi = {
 	 */
 	createOrUpdateAuctionComment: (auctionId, data) => {
 		const url = `/auction/${auctionId}/comments/`;
-		return axiosClient.post(url, data, config);
+		return api.post(url, data, config);
 	},
 	decreateAuctionVote: (auctionId) => {
 		const url = `/auction/${auctionId}/decrease-vote/`;
-		return axiosClient.post(url, null, config);
+		return api.post(url, null, config);
 	},
 	increateAuctionVote: (auctionId) => {
 		const url = `/auction/${auctionId}/increase-vote/`;
-		return axiosClient.post(url, null, config);
+		return api.post(url, null, config);
 	},
 	/**
 	 * This make a auction fail and cant be interact
@@ -77,7 +77,7 @@ const auctionApi = {
 	 */
 	setFailAuctionState: (auctionId) => {
 		const url = `/auction/${auctionId}/fail-auction/`;
-		return axiosClient.post(url, null, config);
+		return api.post(url, null, config);
 	},
 };
 export default auctionApi;

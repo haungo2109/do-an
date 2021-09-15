@@ -27,6 +27,8 @@ import PostDetailScreen from './app/screens/PostDetailScreen';
 import AppBar from './app/components/AppBar';
 import { logoutAction } from './app/redux/actions';
 import { removeAll } from './app/utils/AsyncStorage';
+import AuctionScreen from './app/screens/AuctionSreen';
+import AuctionDetailScreen from './app/screens/AuctionDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,6 +65,21 @@ const HomeStack = (props) => {
 		</Stack.Navigator>
 	);
 };
+const AuctionStack = (props) => {
+	return (
+		<Stack.Navigator initialRouteName="Auction">
+			<Stack.Screen
+				name="Auction"
+				component={AuctionScreen}
+				options={{ headerTitle: () => <AppBar {...props} /> }}
+			/>
+			<Stack.Screen
+				name="AuctionDetail"
+				component={AuctionDetailScreen}
+			/>
+		</Stack.Navigator>
+	);
+};
 function CustomDrawerContent(props) {
 	const dispatch = useDispatch();
 	return (
@@ -82,12 +99,17 @@ function CustomDrawerContent(props) {
 const AppDrawer = () => {
 	return (
 		<Drawer.Navigator
-			initialRouteName="HomeStack"
+			initialRouteName="AuctionStack"
 			drawerContent={(props) => <CustomDrawerContent {...props} />}
 		>
 			<Drawer.Screen
 				name="HomeStack"
 				component={HomeStack}
+				options={{ headerShown: false }}
+			/>
+			<Drawer.Screen
+				name="AuctionStack"
+				component={AuctionStack}
 				options={{ headerShown: false }}
 			/>
 			<Drawer.Screen

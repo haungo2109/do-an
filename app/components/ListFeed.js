@@ -1,10 +1,9 @@
 import React from 'react';
-import Feed from 'components/Feed';
+import Feed from './Feed';
 import { useDispatch, useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import Colors from '../config/Colors';
-import { setControllerMenu } from '../redux/reducers/controllerReducer';
 import useModelMenu from '../hooks/useModelMenu.js';
 import { useNavigation } from '@react-navigation/native';
 import { fetchComment } from '../redux/reducers/commentReducer';
