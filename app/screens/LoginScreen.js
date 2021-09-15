@@ -70,7 +70,7 @@ function LoginScreen({ navigation }, props) {
 		formData.append('grant_type', 'password');
 
 		dispatch(loginAction(formData)).then(() => {
-			navigation.navigate('Home');
+			navigation.navigate('App');
 		});
 	};
 

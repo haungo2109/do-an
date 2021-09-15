@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/core';
@@ -10,6 +10,7 @@ const Container = styled.View`
 	flex-direction: row;
 	justify-content: space-between;
 `;
+const ButtonDrawer = styled.TouchableOpacity``;
 const Text = styled.Text`
 	color: ${Colors.facebookColor};
 	font-size: 25px;
@@ -30,16 +31,19 @@ const Button = styled.TouchableOpacity`
 	padding: 4px;
 `;
 
-const AppBar = () => {
-	const navigation = useNavigation();
-
+const AppBar = ({ navigation }) => {
 	const handleButton = (to = '') => {
 		navigation.navigate(to);
 	};
-
 	return (
 		<Container>
-			<Text>Kanj</Text>
+			<ButtonDrawer
+				onPress={() => {
+					navigation.toggleDrawer();
+				}}
+			>
+				<Text>Kanj</Text>
+			</ButtonDrawer>
 			<Row>
 				<Button onPress={() => handleButton('Chat')}>
 					<Feather name="search" size={27} color="black" />
