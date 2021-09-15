@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-	ActivityIndicator,
-	FlatList,
-	ScrollView,
-	Text,
-	VirtualizedList,
-} from 'react-native';
+import { ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { baseURL } from '../api/apiClient';
@@ -61,14 +55,15 @@ function PostDetailScreen({ route, navigation }) {
 	const item = useSelector((state) => state.post.data[postIndex]);
 	const [inputComment, setInputComment] = useState('');
 	const { showModelMenu } = useModelMenu();
+
 	const handlePressMenu = (uid, post) => {
-		// if (user.id === uid)
-		// 	showModelMenu({
-		// 		id: post.id,
-		// 		listChoose: ['edit', 'delete'],
-		// 		data: post,
-		// 	});
-		// else showModelMenu({ id: post.id, listChoose: ['report'], data: post });
+		if (user.id === uid)
+			showModelMenu({
+				id: post.id,
+				listChoose: ['edit', 'delete'],
+				data: post,
+			});
+		else showModelMenu({ id: post.id, listChoose: ['report'], data: post });
 	};
 	const handleSendComment = () => {
 		const data = new FormData();

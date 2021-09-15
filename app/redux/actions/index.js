@@ -1,7 +1,7 @@
 import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userApi from '../../api/userApi';
 
-const logout = createAction('LOGOUT_USER');
+export const logoutAction = createAction('user/logout');
 
 export const loginAction = createAsyncThunk(
 	'auth/getToken',

@@ -96,9 +96,9 @@ const ErrorText = styled.Text`
 `;
 const ModelEdit = () => {
 	const dispatch = useDispatch();
-	const { id, show, title, data, handleSubmit } = useSelector(
-		(state) => state.controller.editPost
-	);
+	const {
+		editPost: { id, show, title, data, handleSubmit },
+	} = useSelector((state) => state.controller);
 	const { error } = useSelector((state) => state.post);
 	const { hiddenModelEdit } = useModelEdit();
 
@@ -109,9 +109,8 @@ const ModelEdit = () => {
 			setInput((preState) => ({ ...preState, [name]: value }));
 		};
 	};
-
 	useEffect(() => {
-		setInput(data);
+		setInput({ ...data });
 	}, [data]);
 
 	const mapHandleSubmit = {
@@ -132,14 +131,16 @@ const ModelEdit = () => {
 		const formData = new FormData();
 		formData.append('first_name', first_name);
 		formData.append('last_name', last_name);
-		formData.append('birthday', birthday);
 		formData.append('email', email);
+		formData.append('birthday', birthday);
 		formData.append('phone', phone);
 		formData.append('address', address);
-		console.log('form submit update profile: ', data);
-		dispatch(updateCurrenUserAction({ id, data: formData })).then(() => {
-			hiddenModelEdit();
-		});
+		console.log('form submit update profile: ', formData, input);
+		dispatch(updateCurrenUserAction({ id, data: formData }))
+			.unwrap()
+			.then(() => {
+				hiddenModelEdit();
+			});
 	};
 	const handelSubmitEditPost = () => {
 		const { content, post_images, hashtag } = input;

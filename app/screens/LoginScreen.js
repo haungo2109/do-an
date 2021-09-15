@@ -15,6 +15,7 @@ import converObjToFormData from '../utils/ObjectToFormData';
 import { client_id, client_secret } from '../api/apiClient';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginAction } from '../redux/actions';
+import Colors from '../config/Colors';
 
 const WapperInput = styled.View`
 	width: 75%;
@@ -46,8 +47,11 @@ const TextButtonBorder = styled.Text`
 	color: #f3f4f6;
 `;
 const ErrorText = styled.Text`
-	color: #f97316;
+	color: ${Colors.gray1};
 	font-size: 12px;
+	padding: 2px;
+	border-radius: 2px;
+	background-color: ${Colors.red5};
 `;
 const Input = styled.TextInput``;
 const Icon = styled.View`
@@ -55,9 +59,14 @@ const Icon = styled.View`
 	position: absolute;
 	left: 15px;
 `;
-function LoginScreen({ navigation }, props) {
-	const [username, setUsername] = useState('haungo1');
-	const [password, setPassword] = useState('123456');
+function LoginScreen({ navigation, route }, props) {
+	const [username, setUsername] = useState(
+		route?.params?.username || 'haungo1'
+	);
+	const [password, setPassword] = useState(
+		route?.params?.password || '123456'
+	);
+	const [error, setError] = useState('');
 	const dispatch = useDispatch();
 
 	const handleLogin = () => {
@@ -69,9 +78,14 @@ function LoginScreen({ navigation }, props) {
 		formData.append('client_secret', client_secret);
 		formData.append('grant_type', 'password');
 
-		dispatch(loginAction(formData)).then(() => {
-			navigation.navigate('App');
-		});
+		dispatch(loginAction(formData))
+			.unwrap()
+			.then(() => {
+				navigation.navigate('App');
+			})
+			.catch((err) => {
+				setError(err.message);
+			});
 	};
 
 	const handleSetPassword = () => {};
@@ -83,7 +97,7 @@ function LoginScreen({ navigation }, props) {
 					<Text>RegsterScreen view ahihi</Text>
 				</Logo>
 				<GroupButton colors={['rgba(2,0,36,0)', 'rgba(10,9,15,1)']}>
-					{/* <ErrorText>{error}</ErrorText> */}
+					{error !== '' && <ErrorText>{error}</ErrorText>}
 					{/* {loading && (
 						<ActivityIndicator size="small" color="white" />
 					)} */}

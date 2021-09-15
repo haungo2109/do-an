@@ -16,7 +16,6 @@ const Container = styled.SafeAreaView`
 function HomeScreen(props) {
 	const [refreshing, setRefreshing] = useState(false);
 	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user);
 
 	const onRefresh = useCallback(async () => {
 		setRefreshing(true);

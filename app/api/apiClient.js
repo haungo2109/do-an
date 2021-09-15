@@ -36,8 +36,16 @@ const refreshAccessToken = async () => {
 };
 
 const handleError = (err) => {
-	console.log('handle error');
 	if (!err?.response) return Promise.reject('Lỗi app form điền bị sai.');
+	console.log('Error in request', err.response.data);
+
+	const { status, data } = err.response;
+
+	if (status === 400 && data?.username)
+		return Promise.reject('Username này đã đăng ký.');
+	if (status === 400 && data?.error && data?.error === 'invalid_grant')
+		return Promise.reject('Thông tin đăng nhập sai.');
+
 	if (err.response.status !== 401) return Promise.reject(err.message);
 
 	const originalConfig = err.config;

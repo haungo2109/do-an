@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import postApi from '../../api/postApi';
+import { logoutAction } from '../actions';
 
 export const fetchComment = createAsyncThunk(
 	'comment/fetchComment',
@@ -39,6 +40,10 @@ const commentSlice = createSlice({
 			state = Object.assign(state, {
 				loading: true,
 			});
+		});
+
+		builder.addCase(logoutAction, (state) => {
+			state = { error: '', data: [], loading: false };
 		});
 	},
 });

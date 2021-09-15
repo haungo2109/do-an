@@ -3,13 +3,18 @@ import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { store, persistor } from './app/redux/store';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import styled from 'styled-components';
 import ModelEdit from './app/components/ModelEdit';
 import ModelMenu from './app/components/ModelMenu';
 import ModelImageSelection from './app/components/ModelImageSelection';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import {
+	createDrawerNavigator,
+	DrawerContentScrollView,
+	DrawerItem,
+	DrawerItemList,
+} from '@react-navigation/drawer';
 import 'react-native-gesture-handler';
 
 import HomeScreen from './app/screens/HomeScreen';
@@ -20,6 +25,8 @@ import WellcomeScreen from './app/screens/WellcomeScreen';
 import ChatScreen from './app/screens/ChatScreen';
 import PostDetailScreen from './app/screens/PostDetailScreen';
 import AppBar from './app/components/AppBar';
+import { logoutAction } from './app/redux/actions';
+import { removeAll } from './app/utils/AsyncStorage';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -56,12 +63,30 @@ const HomeStack = (props) => {
 		</Stack.Navigator>
 	);
 };
-
+function CustomDrawerContent(props) {
+	const dispatch = useDispatch();
+	return (
+		<DrawerContentScrollView {...props}>
+			<DrawerItemList {...props} />
+			<DrawerItem
+				label="Logout"
+				onPress={() => {
+					dispatch(logoutAction());
+					removeAll();
+					props.navigation.navigate('Wellcome');
+				}}
+			/>
+		</DrawerContentScrollView>
+	);
+}
 const AppDrawer = () => {
 	return (
-		<Drawer.Navigator initialRouteName="Home">
+		<Drawer.Navigator
+			initialRouteName="HomeStack"
+			drawerContent={(props) => <CustomDrawerContent {...props} />}
+		>
 			<Drawer.Screen
-				name="Home"
+				name="HomeStack"
 				component={HomeStack}
 				options={{ headerShown: false }}
 			/>
@@ -74,29 +99,33 @@ const AppDrawer = () => {
 	);
 };
 
+const AppContainer = () => {
+	const user = useSelector((state) => state.user);
+	return (
+		<Stack.Navigator initialRouteName={user ? 'App' : 'Wellcome'}>
+			<Stack.Screen
+				name="Wellcome"
+				component={WellcomeScreen}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen name="Login" component={LoginScreen} />
+			<Stack.Screen name="Register" component={RegisterScreen} />
+			<Stack.Screen
+				name="App"
+				component={AppDrawer}
+				options={{ headerShown: false }}
+			/>
+		</Stack.Navigator>
+	);
+};
+
 export default function App() {
 	return (
 		<Provider store={store}>
 			<PersistGate loading={<LoadingMarkup />} persistor={persistor}>
 				<StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
 				<NavigationContainer>
-					<Stack.Navigator initialRouteName="Wellcome">
-						<Stack.Screen
-							name="Wellcome"
-							component={WellcomeScreen}
-							options={{ headerShown: false }}
-						/>
-						<Stack.Screen name="Login" component={LoginScreen} />
-						<Stack.Screen
-							name="Register"
-							component={RegisterScreen}
-						/>
-						<Stack.Screen
-							name="App"
-							component={AppDrawer}
-							options={{ headerShown: false }}
-						/>
-					</Stack.Navigator>
+					<AppContainer />
 				</NavigationContainer>
 				<WrapperModel>
 					<ModelMenu />

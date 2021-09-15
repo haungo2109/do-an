@@ -17,20 +17,20 @@ const Container = styled.View`
 `;
 
 const LogoWrapper = styled.View`
-	flex: 4;
+	flex: 3;
 	align-items: center;
 	justify-content: center;
 `;
 
 const LogoImage = styled.Image`
-    width: 150px;
-    height: 150px;
-`
+	width: 150px;
+	height: 150px;
+`;
 
 const LogoText = styled.Text`
-    color: white;
-    font-size: 15px;
-`
+	color: white;
+	font-size: 15px;
+`;
 
 const GroupButton = styled.View`
 	flex: 6;
@@ -88,7 +88,14 @@ const SmallText = styled.Text`
 	color: #9ca3af;
 `;
 
-export { ImageBackground, Container, LogoWrapper as Logo, ButtonLink, TextLink, SmallText };
+export {
+	ImageBackground,
+	Container,
+	LogoWrapper as Logo,
+	ButtonLink,
+	TextLink,
+	SmallText,
+};
 
 function WellcomeScreen({ navigation }, props) {
 	const handleLoginGoogle = () => {};

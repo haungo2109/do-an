@@ -4,13 +4,16 @@ import Colors from '../config/Colors';
 import { Entypo, Feather, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import ToolBar from '../components/ToolBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { baseURL } from '../api/apiClient';
+import { baseURL, client_secret } from '../api/apiClient';
 import { getMyPost } from '../redux/reducers/postReducer';
 import ListFeed from '../components/ListFeed';
 import { ScrollView } from 'react-native';
 import useModelEdit from '../hooks/useModelEdit';
 import useModelImageSelection from '../hooks/useModelImageSelection';
-import { updateCurrenUserAction } from '../redux/reducers/userReducer';
+import {
+	getCurrenUserAction,
+	updateCurrenUserAction,
+} from '../redux/reducers/userReducer';
 
 const Container = styled.SafeAreaView`
 	flex: 1;
@@ -83,13 +86,16 @@ const ItemInfo = styled.View`
 `;
 
 function UserScreen() {
+	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
 	const { images } = useSelector((state) => state.controller.imageSelection);
-	const dispatch = useDispatch();
 	const { showModelEdit } = useModelEdit('Chỉnh sửa thông tin cá nhân');
 	const { showModelImageSelection } = useModelImageSelection(1, 1);
+
 	useEffect(() => {
+		dispatch(getCurrenUserAction());
 		dispatch(getMyPost());
+		console.log('log user in userscreen', user);
 	}, []);
 	useEffect(() => {
 		if (images !== null) {
@@ -103,7 +109,6 @@ function UserScreen() {
 				type: 'image/' + item.uri.slice(item.uri.lastIndexOf('.') + 1),
 				name: item.filename || `filename${i}.jpg`,
 			});
-			console.log('change imges is: ', data);
 			dispatch(updateCurrenUserAction({ id: user.id, data }));
 		}
 	}, [images]);

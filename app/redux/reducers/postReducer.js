@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import postApi from '../../api/postApi';
+import { logoutAction } from '../actions';
 
 export const getAllPostAction = createAsyncThunk(
 	'post/fetchAllPost',
@@ -153,6 +154,15 @@ const postSlice = createSlice({
 		});
 		builder.addCase(updatePost.pending, (state, action) => {
 			state = Object.assign(state, { loading: true });
+		});
+		builder.addCase(logoutAction, (state) => {
+			state = {
+				page: 1,
+				data: [],
+				error: '',
+				loading: false,
+				nextPage: '',
+			};
 		});
 	},
 });

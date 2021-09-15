@@ -1,11 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import userApi from '../../api/userApi';
 import converUri from '../../utils/ConverUri';
+import { logoutAction } from '../actions';
 
 export const getCurrenUserAction = createAsyncThunk(
 	'users/fetchCurrentUser',
 	async () => {
 		const response = await userApi.getCurrentUserInfo();
+		return response;
+	}
+);
+export const registerUserAction = createAsyncThunk(
+	'users/registerUser',
+	async (data) => {
+		const response = await userApi.register(data);
 		return response;
 	}
 );
@@ -20,13 +28,11 @@ export const updateCurrenUserAction = createAsyncThunk(
 const userSlice = createSlice({
 	name: 'user',
 	initialState: {},
-	reducers: {
-		setUser(state, action) {
-			state = action.payload;
-		},
-	},
 	extraReducers: (builder) => {
 		builder.addCase(getCurrenUserAction.fulfilled, (state, action) => {
+			state = Object.assign(state, action.payload);
+		});
+		builder.addCase(registerUserAction.fulfilled, (state, action) => {
 			state = Object.assign(state, action.payload);
 		});
 		builder.addCase(updateCurrenUserAction.fulfilled, (state, action) => {
@@ -38,8 +44,15 @@ const userSlice = createSlice({
 				error: action.error.message || 'Unknown error.',
 			});
 		});
+		builder.addCase(registerUserAction.rejected, (state, action) => {
+			state = Object.assign(state, {
+				error: action.error.message || 'Unknown error.',
+			});
+		});
+		builder.addCase(logoutAction, (state) => {
+			state = {};
+		});
 	},
 });
 
-export const { setUser } = userSlice.actions;
 export default userSlice.reducer;

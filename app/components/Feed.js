@@ -213,7 +213,7 @@ const Feed = ({
 
 					<Button
 						onPress={() => {
-							if (count_comment !== 0) goPostDetail(index, id);
+							goPostDetail(index, id);
 						}}
 					>
 						<Icon>

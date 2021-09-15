@@ -9,8 +9,12 @@ import { useSelector } from 'react-redux';
 import useModelImageSelection from '../hooks/useModelImageSelection';
 
 const Container = styled.View`
-	justify-content: flex-start;
 	flex: 1;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	justify-content: flex-start;
 `;
 const ModelView = styled.View`
 	height: 100%;
@@ -46,7 +50,7 @@ const ModelImageSelection = () => {
 	const { show, max, min } = useSelector(
 		(state) => state.controller.imageSelection
 	);
-	const { setImage, hiddenModelImageSelection } = useModelImageSelection();
+	const { hiddenModelImageSelection } = useModelImageSelection();
 
 	const widgetSettings = useMemo(
 		() => ({

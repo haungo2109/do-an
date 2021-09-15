@@ -21,4 +21,10 @@ const getData = async (key) => {
 	}
 };
 
-export { getData, setData };
+const removeAll = async () => {
+	try {
+		await AsyncStorage.clear();
+	} catch (e) {}
+};
+
+export { getData, setData, removeAll };

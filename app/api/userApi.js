@@ -34,7 +34,7 @@ const userApi = {
 	},
 	register: (data) => {
 		const url = '/user/';
-		return api.post(url, body);
+		return api.post(url, data, config);
 	},
 	getUserInfo: (id) => {
 		const url = `/user/${id}`;

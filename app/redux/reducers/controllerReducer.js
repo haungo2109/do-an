@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import postApi from '../../api/postApi';
+import { logoutAction } from '../actions';
 
 export const setDataEditPost = createAsyncThunk(
 	'post/fetchOnePost',
@@ -9,30 +10,32 @@ export const setDataEditPost = createAsyncThunk(
 	}
 );
 
+const initState = {
+	menuPost: {
+		id: 0,
+		show: false,
+		listChoose: ['edit', 'delete', 'report'],
+		data: {},
+	},
+	editPost: {
+		id: 0,
+		show: false,
+		listChoose: ['content', 'hashtag', 'images'],
+		title: 'Chỉnh sửa bài đăng',
+		data: {},
+		handleSubmit: '',
+	},
+	imageSelection: {
+		show: false,
+		images: null,
+		min: 1,
+		max: 10,
+	},
+};
+
 const controllerSlice = createSlice({
 	name: 'controller',
-	initialState: {
-		menuPost: {
-			id: 0,
-			show: false,
-			listChoose: ['edit', 'delete', 'report'],
-			data: {},
-		},
-		editPost: {
-			id: 0,
-			show: false,
-			listChoose: ['content', 'hashtag', 'images'],
-			title: 'Chỉnh sửa bài đăng',
-			data: {},
-			handleSubmit: '',
-		},
-		imageSelection: {
-			show: false,
-			images: null,
-			min: 1,
-			max: 10,
-		},
-	},
+	initialState: initState,
 	reducers: {
 		setControllerMenu(state, action) {
 			state = Object.assign(state, {
@@ -40,9 +43,14 @@ const controllerSlice = createSlice({
 			});
 		},
 		setControllerEdit(state, action) {
+			console.log('log set controller:', action.payload);
 			state = Object.assign(state, {
 				editPost: { ...state.editPost, ...action.payload },
 			});
+			state.editPost.data = Object.assign(
+				state.editPost.data,
+				action.payload.data
+			);
 		},
 		setControllerImageSelection(state, action) {
 			state = Object.assign(state, {
@@ -57,6 +65,9 @@ const controllerSlice = createSlice({
 			state = Object.assign(state, {
 				editPost: { ...state.editPost, data },
 			});
+		});
+		builder.addCase(logoutAction, (state) => {
+			state = Object.assign(state, initState);
 		});
 	},
 });
