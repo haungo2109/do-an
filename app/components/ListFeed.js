@@ -7,6 +7,7 @@ import Colors from '../config/Colors';
 import { setControllerMenu } from '../redux/reducers/controllerReducer';
 import useModelMenu from '../hooks/useModelMenu.js';
 import { useNavigation } from '@react-navigation/native';
+import { fetchComment } from '../redux/reducers/commentReducer';
 
 const WrapperList = styled.View`
 	background-color: ${Colors.gray2};
@@ -14,6 +15,7 @@ const WrapperList = styled.View`
 `;
 
 function ListFeed(props) {
+	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
 	const { data, loading } = useSelector((state) => state.post);
 	const { showModelMenu } = useModelMenu();
@@ -34,20 +36,22 @@ function ListFeed(props) {
 		}
 		return false;
 	};
-	const navigatePostDetail = (data = {}) => {
-		navigation.navigate('PostDetail', data);
+	const navigatePostDetail = async (index, id) => {
+		await dispatch(fetchComment(id));
+		navigation.navigate('PostDetail', { postIndex: index });
 	};
 	return (
 		<>
 			<WrapperList>
 				{data.length !== 0 &&
-					data.map((c) => (
+					data.map((c, index) => (
 						<Feed
 							key={c.id}
 							{...c}
 							handlePressMenu={handlePressMenu}
 							isLike={checkLiked(c.like)}
 							goPostDetail={navigatePostDetail}
+							index={index}
 						/>
 					))}
 				{loading && <ActivityIndicator size="large" color="#0000ff" />}

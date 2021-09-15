@@ -121,6 +121,7 @@ const Feed = ({
 	count_comment,
 	handlePressMenu,
 	goPostDetail,
+	index,
 }) => {
 	const dispatch = useDispatch();
 
@@ -212,18 +213,7 @@ const Feed = ({
 
 					<Button
 						onPress={() => {
-							if (count_comment !== 0)
-								goPostDetail({
-									content,
-									create_at,
-									hashtag,
-									id,
-									like,
-									isLike,
-									post_images,
-									user,
-									count_comment,
-								});
+							if (count_comment !== 0) goPostDetail(index, id);
 						}}
 					>
 						<Icon>

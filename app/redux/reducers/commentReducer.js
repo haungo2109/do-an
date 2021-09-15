@@ -8,6 +8,13 @@ export const fetchComment = createAsyncThunk(
 		return response;
 	}
 );
+export const sendComment = createAsyncThunk(
+	'comment/sendComment',
+	async ({ id, data }, thunkAPI) => {
+		const response = await postApi.createPostComment(id, data);
+		return response;
+	}
+);
 
 const commentSlice = createSlice({
 	name: 'comment',
@@ -15,7 +22,11 @@ const commentSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder.addCase(fetchComment.fulfilled, (state, action) => {
-            state.data = action.payload;
+			state.data = action.payload;
+			state.loading = false;
+		});
+		builder.addCase(sendComment.fulfilled, (state, action) => {
+			state.data.push(action.payload);
 			state.loading = false;
 		});
 		builder.addCase(fetchComment.rejected, (state, action) => {

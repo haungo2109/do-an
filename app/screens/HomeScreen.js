@@ -25,13 +25,7 @@ function HomeScreen(props) {
 	}, []);
 
 	useEffect(() => {
-		dispatch(getCurrenUserAction())
-			.then(() => {
-				console.log('get user success');
-			})
-			.catch(() => {
-				console.log('fail get user');
-			});
+		dispatch(getCurrenUserAction());
 		dispatch(getAllPostAction());
 	}, []);
 
@@ -46,7 +40,6 @@ function HomeScreen(props) {
 						/>
 					}
 				>
-					<AppBar />
 					<ToolBar />
 					<Users />
 					<ListFeed />

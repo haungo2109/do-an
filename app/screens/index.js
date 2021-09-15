@@ -1,3 +1,4 @@
+import React from 'react';
 import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
@@ -5,6 +6,7 @@ import UserScreen from './UserScreen';
 import WellcomeScreen from './WellcomeScreen';
 import ChatScreen from './ChatScreen';
 import PostDetailScreen from './PostDetailScreen';
+import AppBar from '../components/AppBar';
 
 const navigator = [
 	{
@@ -15,7 +17,7 @@ const navigator = [
 	{
 		name: 'Home',
 		component: HomeScreen,
-		options: { headerShown: false },
+		options: { headerTitle: (props) => <AppBar {...props} /> },
 	},
 	{
 		name: 'User',

@@ -10,6 +10,12 @@ import styled from 'styled-components';
 import ModelEdit from './app/components/ModelEdit';
 import ModelMenu from './app/components/ModelMenu';
 import ModelImageSelection from './app/components/ModelImageSelection';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import {
+// 	createSwitchNavigator,
+// 	createAppContainer,
+// } from '@react-navigation';
 
 const Stack = createNativeStackNavigator();
 const WrapperModel = styled.View`
@@ -31,6 +37,22 @@ const LoadingMarkup = () => (
 	</View>
 );
 
+// const AppDrawerNavigator = createDrawerNavigator({
+// 	Home: {
+// 		screen: Home,
+// 	},
+//     Auction: {Screen: Auction},
+//     Chat: {screen: Chat},
+//     Setting: {screen: Setting},
+// });
+
+// const AppSwitchNavigator = createSwitchNavigator({
+// 	Welcome: { screen: WelcomeScreen },
+// 	App: { screen: AppDrawerNavigator },
+// });
+
+// const AppContainer = createAppContainer(AppSwitchNavigator);
+
 export default function App() {
 	const loadNavigator = (screens = []) => {
 		return screens.map((c, i) => <Stack.Screen {...c} key={i} />);
@@ -40,7 +62,7 @@ export default function App() {
 			<PersistGate loading={<LoadingMarkup />} persistor={persistor}>
 				<StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
 				<NavigationContainer>
-					<Stack.Navigator initialRouteName="Wellcome">
+					<Stack.Navigator initialRouteName="Home">
 						{loadNavigator(navigator)}
 					</Stack.Navigator>
 				</NavigationContainer>
