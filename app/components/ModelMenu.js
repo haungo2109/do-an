@@ -1,8 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components/native"
 import {
     Feather,
     MaterialCommunityIcons,
+    FontAwesome,
     MaterialIcons,
     AntDesign,
 } from "@expo/vector-icons"
@@ -14,6 +15,9 @@ import useModelEdit from "../hooks/useModelEdit"
 import useModelMenu from "../hooks/useModelMenu"
 import { baseURL } from "../api/apiClient"
 import { deleteAuctionAction } from "../redux/reducers/auctionReducer"
+import { Alert, Modal } from "react-native"
+import { Picker } from "@react-native-picker/picker"
+import Font from "../config/Font"
 
 const ViewCheckEven = styled.TouchableWithoutFeedback`
     flex: 1;
@@ -50,16 +54,87 @@ const Button = styled.TouchableOpacity`
     margin-bottom: 3px;
     background: ${Colors.gray2};
 `
-
+const Field = styled.View`
+    height: 50px;
+    width: 95%;
+    flex-direction: row;
+    border-radius: 10px;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 3px;
+    background: ${Colors.gray2};
+`
+const TextInput = styled.TextInput`
+    flex: 1;
+    color: ${Colors.gray7};
+    font-size: ${Font.big};
+`
+const TextTitle = styled.Text`
+    font-size: ${Font.bigger};
+    color: ${Colors.gray8};
+    font-weight: bold;
+    margin-bottom: 15px;
+`
+const Row = styled.View`
+    width: 95%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+`
+const WrapperModelReport = styled.View`
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: ${Colors.gray6o5};
+`
+const FormView = styled.View`
+    width: 95%;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+    background-color: ${Colors.gray1};
+    border-radius: 10px;
+`
+const SubmitButton = styled.TouchableOpacity`
+    height: 42px;
+    width: 95%;
+    flex-direction: row;
+    border-radius: 10px;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom: 3px;
+    justify-content: center;
+    margin-top: 10px;
+    background-color: ${Colors.facebookColor};
+`
+const TextSubmitButton = styled.Text`
+    color: ${Colors.gray2};
+    font-weight: bold;
+`
+const WrapperButtonClose = styled.View`
+    position: absolute;
+    right: 0;
+    top: 0;
+`
+const ButtonClose = styled.TouchableWithoutFeedback`
+    border-radius: 10px;
+    background-color: ${Colors.gray9};
+`
 const ModelMenu = () => {
     const dispatch = useDispatch()
-    const { showModelEdit } = useModelEdit("Chỉnh sửa bài viết")
-    const { hiddenModelMenu } = useModelMenu()
+    const [modalVisible, setModalVisible] = useState(false)
+    const [report, setReport] = useState({ type: "", id: "", content: "" })
     const listCategory = useSelector((s) => s.categoryAuction)
+    const listRepostType = useSelector((s) => s.reportType)
 
     const { id, show, listChoose, data } = useSelector(
-        (state) => state.controller.menuPost
+        (s) => s.controller.menuPost
     )
+    const { showModelEdit } = useModelEdit("Chỉnh sửa bài viết")
+    const { hiddenModelMenu } = useModelMenu()
 
     const listButton = {
         edit: {
@@ -118,6 +193,8 @@ const ModelMenu = () => {
             text: "Xóa bài viết",
             handle: () => {
                 dispatch(deletePostAction(id))
+                    .unwrap()
+                    .catch((err) => Alert.alert(err.message))
                 hiddenModelMenu()
             },
         },
@@ -126,6 +203,8 @@ const ModelMenu = () => {
             text: "Xóa bài viết",
             handle: () => {
                 dispatch(deleteAuctionAction(id))
+                    .unwrap()
+                    .catch((err) => Alert.alert(err.message))
                 hiddenModelMenu()
             },
         },
@@ -133,18 +212,22 @@ const ModelMenu = () => {
             icon: <MaterialIcons name="report" size={25} color="black" />,
             text: "Báo cáo bài viết",
             handle: () => {
-                hiddenModelMenu()
+                setModalVisible(true)
             },
         },
         reportAuction: {
             icon: <MaterialIcons name="report" size={25} color="black" />,
             text: "Báo cáo bài viết",
             handle: () => {
-                hiddenModelMenu()
+                setModalVisible(true)
             },
         },
     }
-
+    const handleMultiInput = (name) => {
+        return (value) => {
+            setReport((preState) => ({ ...preState, [name]: value }))
+        }
+    }
     if (show)
         return (
             <>
@@ -160,6 +243,71 @@ const ModelMenu = () => {
                             </Button>
                         ))}
                 </Container>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                >
+                    <WrapperModelReport>
+                        <FormView>
+                            <Row>
+                                <TextTitle>Báo cáo</TextTitle>
+                                <WrapperButtonClose>
+                                    <ButtonClose
+                                        onPress={() =>
+                                            setModalVisible(!modalVisible)
+                                        }
+                                    >
+                                        <AntDesign
+                                            name="close"
+                                            size={25}
+                                            color={Colors.gray6}
+                                        />
+                                    </ButtonClose>
+                                </WrapperButtonClose>
+                            </Row>
+                            <Field>
+                                <Icon>
+                                    <FontAwesome
+                                        name="pencil"
+                                        size={25}
+                                        color={Colors.gray6}
+                                    />
+                                </Icon>
+                                <TextInput
+                                    onChangeText={handleMultiInput("content")}
+                                    value={report["content"]}
+                                    placeholder="Nhập nội dung báo cáo..."
+                                />
+                            </Field>
+                            <Field>
+                                <Icon>
+                                    <MaterialIcons
+                                        name="category"
+                                        size={25}
+                                        color={Colors.gray6}
+                                    />
+                                </Icon>
+                                <Picker
+                                    selectedValue={"1"}
+                                    onValueChange={(val) => setReport(val)}
+                                    style={{ flex: 1 }}
+                                >
+                                    {listRepostType.map((c, i) => (
+                                        <Picker.Item
+                                            key={i}
+                                            label={c.name}
+                                            value={c.id.toString()}
+                                        />
+                                    ))}
+                                </Picker>
+                            </Field>
+                            <SubmitButton>
+                                <TextSubmitButton>GỬI</TextSubmitButton>
+                            </SubmitButton>
+                        </FormView>
+                    </WrapperModelReport>
+                </Modal>
             </>
         )
     else return null

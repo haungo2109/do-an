@@ -4,6 +4,7 @@ import controllerReducer from "./controllerReducer"
 import commentReducer from "./commentReducer"
 import auctionReducer from "./auctionReducer"
 import categoryAuctionReducer from "./categoryAuctionReducer"
+import reportReducer from "./reportReducer"
 
 const rootReducer = {
     user: userReducer,
@@ -12,6 +13,7 @@ const rootReducer = {
     controller: controllerReducer,
     comment: commentReducer,
     categoryAuction: categoryAuctionReducer,
+    reportType: reportReducer,
 }
 
 export default rootReducer
