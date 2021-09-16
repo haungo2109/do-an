@@ -20,7 +20,7 @@ const initState = {
 	editPost: {
 		id: 0,
 		show: false,
-		listChoose: ['content', 'hashtag', 'images'],
+		listChoose: ['content', 'images'],
 		title: 'Chỉnh sửa bài đăng',
 		data: {},
 		handleSubmit: '',

@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { baseURL } from "../api/apiClient"
 import Colors from "../config/Colors"
 import useModelMenu from "../hooks/useModelMenu"
+import { fetchAuctionComment } from "../redux/reducers/commentReducer"
 import Auction from "./Auction"
 import AvatarToProfile from "./Avatar"
 
@@ -59,13 +60,13 @@ function ListAuction(props) {
         if (user.id === uid)
             showModelMenu({
                 id: auction.id,
-                listChoose: ["edit", "delete"],
+                listChoose: ["editAuction", "deleteAuction"],
                 data: auction,
             })
         else
             showModelMenu({
                 id: auction.id,
-                listChoose: ["report"],
+                listChoose: ["reportAuction"],
                 data: auction,
             })
     }
@@ -76,11 +77,8 @@ function ListAuction(props) {
         return false
     }
     const navigateAuctionDetail = async (index, id) => {
-        // await dispatch(fetchComment(id));
-        // navigation.navigate('AuctionDetail', { auctionIndex: index });
-    }
-    const getCategory = (category) => {
-        return "ahihi category"
+        await dispatch(fetchAuctionComment(id))
+        navigation.navigate("AuctionDetail", { auctionIndex: index })
     }
     return (
         <FlatList
@@ -91,12 +89,12 @@ function ListAuction(props) {
             }}
             data={data}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => {
+            renderItem={({ item, index }) => {
                 if (item?.user)
                     return (
                         <Auction
                             {...item}
-                            category={getCategory(item.category)}
+                            index={index}
                             isLike={checkLiked(item.like)}
                             handlePressMenu={handlePressMenu}
                             goAuctionDetail={navigateAuctionDetail}

@@ -6,7 +6,7 @@ import styled from 'styled-components/native';
 import Colors from '../config/Colors';
 import useModelMenu from '../hooks/useModelMenu.js';
 import { useNavigation } from '@react-navigation/native';
-import { fetchComment } from '../redux/reducers/commentReducer';
+import { fetchPostComment } from '../redux/reducers/commentReducer';
 
 const WrapperList = styled.View`
 	background-color: ${Colors.gray2};
@@ -36,7 +36,7 @@ function ListFeed(props) {
 		return false;
 	};
 	const navigatePostDetail = async (index, id) => {
-		await dispatch(fetchComment(id));
+		await dispatch(fetchPostComment(id));
 		navigation.navigate('PostDetail', { postIndex: index });
 	};
 	return (

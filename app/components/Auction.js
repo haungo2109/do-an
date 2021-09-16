@@ -34,12 +34,35 @@ const Time = styled.Text`
     font-size: ${Font.small};
     color: ${Colors.gray5};
 `
-const TextContentAuction = styled.Text`
+const WrapperText = styled.View`
+    padding: 0 11px;
+    border-left-color: ${(props) => props.border || "palevioletred"};
+    border-left-width: 5px;
+`
+const TextContent = styled.Text`
     font-size: ${Font.nomal};
     color: ${Colors.gray7};
     line-height: 20px;
-    padding: 0 11px;
     margin: 3px 0;
+`
+const TextTitle = styled.Text`
+    font-size: ${Font.big};
+    font-weight: bold;
+`
+const TextBasePrice = styled.Text`
+    font-size: ${Font.big};
+    font-weight: bold;
+`
+// deadline
+// status_auction
+// category
+const TextCondition = styled.Text`
+    font-size: ${Font.big};
+    font-weight: bold;
+`
+const TextDeadline = styled.Text`
+    font-size: ${Font.big};
+    font-weight: bold;
 `
 const TextHashTag = styled(Auction)`
     background-color: ${Colors.gray2};
@@ -53,9 +76,9 @@ const WrapperTextHashTag = styled.View`
     flex-wrap: wrap;
 `
 const Photo = styled.Image`
-    margin-top: 9px;
-    margin-right: 5px;
-    width: 500px;
+    /* margin-top: 2px; */
+    /* margin-right: 5px; */
+    /* width: 500px; */
     height: 100%;
 `
 
@@ -159,10 +182,16 @@ function Auction({
                 <ButtonMenu
                     onPress={() =>
                         handlePressMenu(user.id, {
-                            content,
-                            hashtag,
                             id,
+                            title,
+                            content,
+                            base_price,
+                            condition,
+                            deadline,
+                            category,
                             auction_images,
+                            status_auction,
+                            category,
                         })
                     }
                 >
@@ -173,13 +202,19 @@ function Auction({
                     />
                 </ButtonMenu>
             </Header>
-            <TextContentAuction>{title}</TextContentAuction>
-            <TextContentAuction>{content}</TextContentAuction>
-            <TextContentAuction>{base_price}</TextContentAuction>
-            <TextContentAuction>{condition}</TextContentAuction>
-            <TextContentAuction>{deadline}</TextContentAuction>
-            <TextContentAuction>{status_auction}</TextContentAuction>
-            <TextContentAuction>{category}</TextContentAuction>
+            <WrapperText
+                border={
+                    status_auction == "being auctioned"
+                        ? Colors.green5
+                        : Colors.yellow5
+                }
+            >
+                <TextTitle>{title}</TextTitle>
+                <TextContent>{content}</TextContent>
+                <TextContent>Điều kiện: {condition}</TextContent>
+                <TextContent>Giá cơ bản: {base_price}</TextContent>
+                <TextContent>Hạn đấu giá: {deadline.slice(0, 10)}</TextContent>
+            </WrapperText>
             {auction_images?.length !== 0 && (
                 <WrapperImage horizontal showsHorizontalScrollIndicator={false}>
                     {/* {auction_images.map((c) => (
@@ -191,7 +226,6 @@ function Auction({
                     />
                 </WrapperImage>
             )}
-            {/* auction_images/2021/08/99231880.jpg */}
             <Footer>
                 <Separator />
                 <FooterMenu>
