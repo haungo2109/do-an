@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import auctionApi from "../../api/auctionApi"
 import { logoutAction } from "../actions"
+import { changeStatusCommentAuction } from "./commentReducer"
 
 export const getAllAuctionAction = createAsyncThunk(
     "auction/fetchAllAuction",
@@ -20,6 +21,17 @@ export const updateAuction = createAsyncThunk(
     "auction/updateAuction",
     async ({ id, data }) => {
         const response = await auctionApi.patchAuction(id, data)
+        return response
+    }
+)
+export const changeStatusAuctionComment = createAsyncThunk(
+    "auction/changeStatusAuctionComment",
+    async ({ auctionId, comId, state }, thunkAPI) => {
+        const response = await auctionApi
+            .changeStateAuctionComment(auctionId, comId, state)
+            .then((res) => {
+                thunkAPI.dispatch(changeStatusCommentAuction(response))
+            })
         return response
     }
 )
@@ -154,6 +166,26 @@ const auctionSlice = createSlice({
                 loading: false,
             })
         })
+        builder.addCase(
+            changeStatusAuctionComment.fulfilled,
+            (state, action) => {
+                let {
+                    auction_id,
+                    comment_id,
+                    status_auction,
+                    status_transaction,
+                } = action.payload
+
+                let newState = state.data.map((c) =>
+                    c.id != auction_id ? c : { ...c, status_auction }
+                )
+                state = Object.assign(state, {
+                    data: newState,
+                    error: "",
+                    loading: false,
+                })
+            }
+        )
         builder.addCase(updateAuction.rejected, (state, action) => {
             console.log("Rejected Action edit Auction", action)
             state = Object.assign(state, {

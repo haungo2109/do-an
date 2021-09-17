@@ -35,22 +35,38 @@ export const sendAuctionComment = createAsyncThunk(
 const commentSlice = createSlice({
     name: "comment",
     initialState: { error: "", data: [], loading: false },
-    reducers: {},
+    reducers: {
+        changeStatusCommentAuction: (state, action) => {
+            const { status_transaction, comment_id } = action.payload
+            console.log("commentReducer: ", { status_transaction, comment_id })
+            let newState = state.data.map((c) =>
+                c.id == comment_id ? { ...c, status_transaction } : c
+            )
+            state = Object.assign(state, { data: newState })
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchPostComment.fulfilled, (state, action) => {
-            state.data = action.payload
-            state.loading = false
+            state = Object.assign(state, {
+                ...state,
+                data: action.payload,
+                loading: false,
+            })
         })
         builder.addCase(fetchAuctionComment.fulfilled, (state, action) => {
-            state.data = action.payload
-            state.loading = false
+            console.log("fetchAuctionComment.fulfilled", action.payload)
+            state = Object.assign(state, {
+                ...state,
+                data: action.payload,
+                loading: false,
+            })
         })
         builder.addCase(sendPostComment.fulfilled, (state, action) => {
             state.data.push(action.payload)
             state.loading = false
         })
         builder.addCase(sendAuctionComment.fulfilled, (state, action) => {
-            state = Object.assign(state, {data: [action.payload]});
+            state = Object.assign(state, { data: [action.payload] })
             state.loading = false
         })
         builder.addCase(fetchPostComment.rejected, (state, action) => {
@@ -81,5 +97,5 @@ const commentSlice = createSlice({
         })
     },
 })
-
+export const { changeStatusCommentAuction } = commentSlice.actions
 export default commentSlice.reducer

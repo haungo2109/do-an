@@ -35,7 +35,7 @@ const ButtonClose = styled.TouchableWithoutFeedback`
     border-radius: 10px;
     background-color: ${Colors.gray9};
 `
-const TextTitle = styled.Text`
+export const TextTitle = styled.Text`
     font-size: ${Font.bigger};
     color: ${Colors.gray8};
     font-weight: bold;
@@ -66,7 +66,7 @@ const TextInput = styled.TextInput`
 const Icon = styled.View`
     margin-right: 10px;
 `
-const Field = styled.View`
+export const Field = styled.View`
     height: 50px;
     width: 95%;
     flex-direction: row;
@@ -79,7 +79,7 @@ const Field = styled.View`
 const FieldImage = styled(Field)`
     height: 150px;
 `
-const SubmitButton = styled.TouchableOpacity`
+export const SubmitButton = styled.TouchableOpacity`
     height: 42px;
     width: 95%;
     flex-direction: row;
@@ -91,7 +91,7 @@ const SubmitButton = styled.TouchableOpacity`
     margin-top: 10px;
     background-color: ${Colors.facebookColor};
 `
-const TextSubmitButton = styled.Text`
+export const TextSubmitButton = styled.Text`
     color: ${Colors.gray2};
     font-weight: bold;
 `
@@ -120,6 +120,7 @@ const ModelEdit = () => {
     }
     useEffect(() => {
         setInput({ ...data })
+        console.log("data of ModelEdit: ", data)
     }, [data])
 
     const mapHandleSubmit = {
@@ -489,7 +490,7 @@ const ModelEdit = () => {
                                 />
                             </Icon>
                             <Picker
-                                selectedValue={input["category"]}
+                                selectedValue={input["category"].toString()}
                                 onValueChange={handleMultiInput("category")}
                                 style={{ flex: 1 }}
                             >
