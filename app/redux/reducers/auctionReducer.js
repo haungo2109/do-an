@@ -5,8 +5,8 @@ import { changeStatusCommentAuction } from "./commentReducer"
 
 export const getAllAuctionAction = createAsyncThunk(
     "auction/fetchAllAuction",
-    async () => {
-        const response = await auctionApi.getAuctions()
+    async (params) => {
+        const response = await auctionApi.getAuctions(params)
         return response
     }
 )

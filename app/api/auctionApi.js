@@ -7,9 +7,9 @@ const config = {
 }
 
 const auctionApi = {
-    getAuctions: () => {
+    getAuctions: (params) => {
         const url = "/auction/"
-        return api.get(url)
+        return api.get(url, { params })
     },
     postAuction: (data) => {
         const url = "/auction/"

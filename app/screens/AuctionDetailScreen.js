@@ -9,17 +9,9 @@ import Colors from "../config/Colors"
 import Font from "../config/Font"
 import useModelMenu from "../hooks/useModelMenu"
 import { FontAwesome } from "@expo/vector-icons"
-import {
-    sendAuctionComment,
-    sendComment,
-} from "../redux/reducers/commentReducer"
+import { sendAuctionComment } from "../redux/reducers/commentReducer"
 import { Picker } from "@react-native-picker/picker"
-import {
-    Field,
-    SubmitButton,
-    TextSubmitButton,
-    TextTitle,
-} from "../components/ModelEdit"
+import { Field, SubmitButton, TextSubmitButton } from "../components/ModelEdit"
 import { changeStatusAuctionComment } from "../redux/reducers/auctionReducer"
 
 const WrapperComment = styled.View`

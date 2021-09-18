@@ -1,160 +1,143 @@
-import React from 'react';
-import { ActivityIndicator, StatusBar, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { store, persistor } from './app/redux/store';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import styled from 'styled-components';
-import ModelEdit from './app/components/ModelEdit';
-import ModelMenu from './app/components/ModelMenu';
-import ModelImageSelection from './app/components/ModelImageSelection';
-import {
-	createDrawerNavigator,
-	DrawerContentScrollView,
-	DrawerItem,
-	DrawerItemList,
-} from '@react-navigation/drawer';
-import 'react-native-gesture-handler';
-
-import HomeScreen from './app/screens/HomeScreen';
-import LoginScreen from './app/screens/LoginScreen';
-import RegisterScreen from './app/screens/RegisterScreen';
-import UserScreen from './app/screens/UserScreen';
-import WellcomeScreen from './app/screens/WellcomeScreen';
-import ChatScreen from './app/screens/ChatScreen';
-import PostDetailScreen from './app/screens/PostDetailScreen';
-import AppBar from './app/components/AppBar';
-import { logoutAction } from './app/redux/actions';
-import { removeAll } from './app/utils/AsyncStorage';
-import AuctionScreen from './app/screens/AuctionSreen';
-import AuctionDetailScreen from './app/screens/AuctionDetailScreen';
-
-const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+import React, { useEffect, useRef, useState } from "react"
+import { ActivityIndicator, StatusBar, View } from "react-native"
+import { NavigationContainer } from "@react-navigation/native"
+import { store, persistor } from "./app/redux/store"
+import { Provider } from "react-redux"
+import { PersistGate } from "redux-persist/integration/react"
+import styled from "styled-components"
+import ModelEdit from "./app/components/ModelEdit"
+import ModelMenu from "./app/components/ModelMenu"
+import ModelImageSelection from "./app/components/ModelImageSelection"
+import "react-native-gesture-handler"
+import AppContainer from "./app/navigations"
+import Constants from "expo-constants"
+import * as Notifications from "expo-notifications"
 
 const WrapperModel = styled.View`
-	flex: 1;
-	top: 0;
-	left: 0;
-	position: absolute;
-	height: 100%;
-	width: 100%;
-`;
+    flex: 1;
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+`
 const LoadingMarkup = () => (
-	<View
-		style={{
-			flex: 1,
-			justifyContent: 'center',
-		}}
-	>
-		<ActivityIndicator size="large" color="#0000ff" />
-	</View>
-);
+    <View
+        style={{
+            flex: 1,
+            justifyContent: "center",
+        }}
+    >
+        <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+)
 
-const HomeStack = (props) => {
-	return (
-		<Stack.Navigator initialRouteName="Home">
-			<Stack.Screen
-				name="Home"
-				component={HomeScreen}
-				options={{ headerTitle: () => <AppBar {...props} /> }}
-			/>
-			<Stack.Screen name="User" component={UserScreen} />
-			<Stack.Screen name="PostDetail" component={PostDetailScreen} />
-		</Stack.Navigator>
-	);
-};
-const AuctionStack = (props) => {
-	return (
-		<Stack.Navigator initialRouteName="Auction">
-			<Stack.Screen
-				name="Auction"
-				component={AuctionScreen}
-				options={{ headerTitle: () => <AppBar {...props} /> }}
-			/>
-			<Stack.Screen
-				name="AuctionDetail"
-				component={AuctionDetailScreen}
-			/>
-		</Stack.Navigator>
-	);
-};
-function CustomDrawerContent(props) {
-	const dispatch = useDispatch();
-	return (
-		<DrawerContentScrollView {...props}>
-			<DrawerItemList {...props} />
-			<DrawerItem
-				label="Logout"
-				onPress={() => {
-					dispatch(logoutAction());
-					removeAll();
-					props.navigation.navigate('Wellcome');
-				}}
-			/>
-		</DrawerContentScrollView>
-	);
-}
-const AppDrawer = () => {
-	return (
-		<Drawer.Navigator
-			initialRouteName="AuctionStack"
-			drawerContent={(props) => <CustomDrawerContent {...props} />}
-		>
-			<Drawer.Screen
-				name="HomeStack"
-				component={HomeStack}
-				options={{ headerShown: false }}
-			/>
-			<Drawer.Screen
-				name="AuctionStack"
-				component={AuctionStack}
-				options={{ headerShown: false }}
-			/>
-			<Drawer.Screen
-				name="Chat"
-				component={ChatScreen}
-				options={{ headerShown: false }}
-			/>
-		</Drawer.Navigator>
-	);
-};
-
-const AppContainer = () => {
-	const user = useSelector((state) => state.user);
-	return (
-		<Stack.Navigator initialRouteName={user ? 'App' : 'Wellcome'}>
-			<Stack.Screen
-				name="Wellcome"
-				component={WellcomeScreen}
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen name="Login" component={LoginScreen} />
-			<Stack.Screen name="Register" component={RegisterScreen} />
-			<Stack.Screen
-				name="App"
-				component={AppDrawer}
-				options={{ headerShown: false }}
-			/>
-		</Stack.Navigator>
-	);
-};
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+})
 
 export default function App() {
-	return (
-		<Provider store={store}>
-			<PersistGate loading={<LoadingMarkup />} persistor={persistor}>
-				<StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
-				<NavigationContainer>
-					<AppContainer />
-				</NavigationContainer>
-				<WrapperModel>
-					<ModelMenu />
-					<ModelEdit />
-					<ModelImageSelection />
-				</WrapperModel>
-			</PersistGate>
-		</Provider>
-	);
+    const [expoPushToken, setExpoPushToken] = useState("")
+    const [notification, setNotification] = useState(false)
+    const notificationListener = useRef()
+    const responseListener = useRef()
+    useEffect(() => {
+        registerForPushNotificationsAsync().then((token) =>
+            setExpoPushToken(token)
+        )
+
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        notificationListener.current =
+            Notifications.addNotificationReceivedListener((notification) => {
+                setNotification(notification)
+            })
+
+        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        responseListener.current =
+            Notifications.addNotificationResponseReceivedListener(
+                (response) => {
+                    console.log(response)
+                }
+            )
+
+        return () => {
+            Notifications.removeNotificationSubscription(
+                notificationListener.current
+            )
+            Notifications.removeNotificationSubscription(
+                responseListener.current
+            )
+        }
+    }, [])
+    return (
+        <Provider store={store}>
+            <PersistGate loading={<LoadingMarkup />} persistor={persistor}>
+                <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
+                <NavigationContainer>
+                    <AppContainer />
+                </NavigationContainer>
+                <WrapperModel>
+                    <ModelMenu />
+                    <ModelEdit />
+                    <ModelImageSelection />
+                </WrapperModel>
+            </PersistGate>
+        </Provider>
+    )
+}
+
+export async function sendPushNotification(expoPushToken) {
+    const message = {
+        to: expoPushToken,
+        sound: "default",
+        title: "Original Title",
+        body: "And here is the body!",
+        data: { someData: "goes here" },
+    }
+
+    await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Accept-encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+    })
+}
+
+async function registerForPushNotificationsAsync() {
+    let token
+    if (Constants.isDevice) {
+        const { status: existingStatus } =
+            await Notifications.getPermissionsAsync()
+        let finalStatus = existingStatus
+        if (existingStatus !== "granted") {
+            const { status } = await Notifications.requestPermissionsAsync()
+            finalStatus = status
+        }
+        if (finalStatus !== "granted") {
+            alert("Failed to get push token for push notification!")
+            return
+        }
+        token = (await Notifications.getExpoPushTokenAsync()).data
+        console.log(token)
+    } else {
+        alert("Must use physical device for Push Notifications")
+    }
+
+    if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+            name: "default",
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: "#FF231F7C",
+        })
+    }
+
+    return token
 }
