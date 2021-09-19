@@ -17,7 +17,10 @@ import { Alert, Platform } from "react-native"
 import ImageInput from "./ImageInput"
 import { postPostAction, updatePost } from "../redux/reducers/postReducer"
 import { updateCurrenUserAction } from "../redux/reducers/userReducer"
-import { updateAuction } from "../redux/reducers/auctionReducer"
+import {
+    postAuctionAction,
+    updateAuction,
+} from "../redux/reducers/auctionReducer"
 import { Picker } from "@react-native-picker/picker"
 
 const Row = styled.View`
@@ -129,6 +132,9 @@ const ModelEdit = () => {
         },
         addPost: () => {
             handelSubmitAddPost()
+        },
+        addAuction: () => {
+            handelSubmitAddAuction()
         },
         editPost: () => {
             handelSubmitEditPost()
@@ -243,6 +249,44 @@ const ModelEdit = () => {
         if (hashtag !== "") data.append("hashtag", hashtag)
         console.log("form submit add post: ", data)
         dispatch(postPostAction(data))
+            .unwrap()
+            .then(handleSuccess)
+            .catch(handleError)
+    }
+    const handelSubmitAddAuction = () => {
+        const {
+            content,
+            auction_images,
+            base_price,
+            condition,
+            deadline,
+            category,
+            title,
+        } = input
+        const data = new FormData()
+        if (auction_images.length !== 0)
+            auction_images.forEach((item, i) => {
+                data.append("images", {
+                    uri:
+                        Platform.OS === "ios"
+                            ? item.uri.replace("file://", "")
+                            : item.uri,
+                    type:
+                        "image/" +
+                        item.uri.slice(item.uri.lastIndexOf(".") + 1),
+                    name: item.filename || `filename${i}.jpg`,
+                })
+            })
+
+        data.append("title", title)
+        data.append("content", content)
+        data.append("base_price", parseFloat(base_price))
+        data.append("condition", condition)
+        data.append("deadline", deadline)
+        data.append("category", parseInt(category))
+
+        console.log("form submit add post: ", data)
+        dispatch(postAuctionAction(data))
             .unwrap()
             .then(handleSuccess)
             .catch(handleError)

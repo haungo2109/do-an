@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import api from "../../api/apiClient"
 import auctionApi from "../../api/auctionApi"
 import { logoutAction } from "../actions"
 import { changeStatusCommentAuction } from "./commentReducer"
@@ -7,6 +8,13 @@ export const getAllAuctionAction = createAsyncThunk(
     "auction/fetchAllAuction",
     async (params) => {
         const response = await auctionApi.getAuctions(params)
+        return response
+    }
+)
+export const getMoreAuctionAction = createAsyncThunk(
+    "auction/fetchMoreAuction",
+    async (nextPageUrl) => {
+        const response = await api.get(nextPageUrl)
         return response
     }
 )
@@ -79,6 +87,15 @@ const auctionSlice = createSlice({
         builder.addCase(getAllAuctionAction.fulfilled, (state, action) => {
             state = Object.assign(state, {
                 data: action.payload.results,
+                nextPage: action.payload.next,
+                loading: false,
+                error: "",
+            })
+        })
+        builder.addCase(getMoreAuctionAction.fulfilled, (state, action) => {
+            console.log(action.payload)
+            state = Object.assign(state, {
+                data: [...state.data, ...action.payload.results],
                 nextPage: action.payload.next,
                 loading: false,
                 error: "",

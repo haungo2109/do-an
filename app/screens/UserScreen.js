@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import styled from "styled-components/native"
 import Colors from "../config/Colors"
 import { Entypo, Feather, FontAwesome, FontAwesome5 } from "@expo/vector-icons"
-import ToolBar from "../components/ToolBar"
+import MakerPost from "../components/MakerPost"
 import { useDispatch, useSelector } from "react-redux"
 import { baseURL, client_secret } from "../api/apiClient"
 import { getMyPost } from "../redux/reducers/postReducer"
@@ -201,7 +201,7 @@ function UserScreen(props) {
                         </ItemInfo>
                     </WrapperInfo>
                 </ContainerProfile>
-                <ToolBar />
+                <MakerPost />
                 <ListFeed />
             </ScrollView>
         </Container>

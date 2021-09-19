@@ -4,7 +4,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import { useDispatch } from "react-redux"
 import styled from "styled-components/native"
 import ListAuction from "../components/ListAuction"
-import ToolBar from "../components/ToolBar"
+import MakerPost from "../components/MakerPost"
 import { getAllAuctionAction } from "../redux/reducers/auctionReducer"
 import { getCategoryAction } from "../redux/reducers/categoryAuctionReducer"
 
@@ -28,7 +28,7 @@ function AuctionScreen(props) {
     useEffect(() => {
         dispatch(getAllAuctionAction())
         dispatch(getCategoryAction())
-    }, [])
+    })
 
     return (
         <>
