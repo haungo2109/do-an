@@ -8,13 +8,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { dislikePost, likePost } from "../redux/reducers/postReducer"
 import Colors from "../config/Colors"
 import Font from "../config/Font"
-import postApi from "../api/postApi"
 import { Photo, WrapperImage } from "./Auction"
 
 const Container = styled.View`
-    flex: 1;
+    height: ${(props) => props.heightContainer};
     margin-bottom: 10px;
     background-color: ${Colors.gray};
+    justify-content: space-between;
 `
 const Header = styled.View`
     height: 50px;
@@ -125,13 +125,16 @@ const Feed = ({
     }
 
     return (
-        <Container>
+        <Container
+            heightContainer={post_images.length === 0 ? "180px" : "500px"}
+        >
             <Header>
                 <Row>
                     <Avatar
                         source={{
                             uri: baseURL + user.avatar,
                         }}
+                        user_id={user.id}
                     />
                     <View style={{ paddingLeft: 10 }}>
                         <User>{user.full_name}</User>

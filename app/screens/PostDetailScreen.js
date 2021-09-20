@@ -85,6 +85,7 @@ function PostDetailScreen({ route, navigation }) {
                         source={{
                             uri: baseURL + user.avatar,
                         }}
+                        user_id={user.id}
                     />
                     <TextInput
                         onChangeText={setInputComment}
@@ -109,6 +110,7 @@ const Item = ({ user, content }) => {
                 source={{
                     uri: baseURL + user.avatar,
                 }}
+                user_id={user.id}
             />
             <CommentText>{content}</CommentText>
         </ItemComment>

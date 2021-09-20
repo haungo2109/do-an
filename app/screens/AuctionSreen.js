@@ -16,14 +16,7 @@ const WrapperFlatList = styled.View`
 `
 
 function AuctionScreen(props) {
-    const [refreshing, setRefreshing] = useState(false)
     const dispatch = useDispatch()
-
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true)
-        await dispatch(getAllAuctionAction())
-        setRefreshing(false)
-    }, [])
 
     useEffect(() => {
         dispatch(getAllAuctionAction())

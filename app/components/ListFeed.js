@@ -5,10 +5,20 @@ import { ActivityIndicator, FlatList } from "react-native"
 import useModelMenu from "../hooks/useModelMenu.js"
 import { useNavigation } from "@react-navigation/native"
 import { fetchPostComment } from "../redux/reducers/commentReducer"
-import { TextEndFooter, WrapperActivityIndicator } from "./ListAuction"
-import { getMorePostAction } from "../redux/reducers/postReducer"
-import MakerPost from "./MakerPost"
-import Users from "./Users"
+import {
+    getAllPostAction,
+    getMorePostAction,
+} from "../redux/reducers/postReducer"
+import styled from "styled-components"
+
+const WrapperActivityIndicator = styled.View`
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px;
+`
+const TextEndFooter = styled.Text`
+    flex: 1;
+`
 
 function ListFeed(props) {
     const dispatch = useDispatch()
@@ -46,29 +56,42 @@ function ListFeed(props) {
         navigation.navigate("PostDetail", { postIndex: index })
     }
     const renderFooter = () => {
-        return (
+        return nextPage ? (
             <WrapperActivityIndicator>
-                {nextPage ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
-                ) : (
-                    <TextEndFooter>THE END</TextEndFooter>
-                )}
+                <ActivityIndicator size="large" color="#0000ff" />
             </WrapperActivityIndicator>
-        )
+        ) : null
     }
     const onRefresh = useCallback(async () => {
         setRefreshing(true)
         await dispatch(getAllPostAction())
         setRefreshing(false)
     }, [])
+
+    const renderItem = ({ item, index }) => {
+        if (item?.user)
+            return (
+                <Feed
+                    {...item}
+                    index={index}
+                    isLike={checkLiked(item.like)}
+                    handlePressMenu={handlePressMenu}
+                    goPostDetail={navigatePostDetail}
+                />
+            )
+        else return null
+    }
+    const onScroll = () => {
+        if (hasScrolled) return
+        setHasScrolled(true)
+    }
     return (
         <>
             <FlatList
-                onScroll={() => {
-                    setHasScrolled(true)
-                }}
+                onScroll={onScroll}
                 onRefresh={onRefresh}
                 refreshing={refreshing}
+                removeClippedSubviews={true}
                 nestedScrollEnabled
                 extraData={data}
                 contentContainerStyle={{
@@ -80,28 +103,12 @@ function ListFeed(props) {
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item, index }) => {
-                    if (item?.user)
-                        return (
-                            <Feed
-                                {...item}
-                                index={index}
-                                isLike={checkLiked(item.like)}
-                                handlePressMenu={handlePressMenu}
-                                goPostDetail={navigatePostDetail}
-                            />
-                        )
-                    else return null
-                }}
+                renderItem={renderItem}
                 ListFooterComponent={renderFooter}
-                ListHeaderComponent={() => (
-                    <>
-                        <MakerPost />
-                        <Users />
-                    </>
-                )}
+                ListHeaderComponent={
+                    props?.headerComponent && props.headerComponent
+                }
             />
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
         </>
     )
 }

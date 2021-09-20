@@ -1,25 +1,50 @@
 import React from "react"
-import HomeScreen from "../screens/HomeScreen"
-import AppBar from "../components/AppBar"
-import UserScreen from "../screens/UserScreen"
-import PostDetailScreen from "../screens/PostDetailScreen"
-import SearchSreen from "../screens/SearchSreen"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import UserProfileScreen from "../screens/UserProfileScreen"
+import UserAuctionScreen from "../screens/UserAuctionScreen"
+import { AntDesign, FontAwesome } from "@expo/vector-icons"
 
+const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
+
+const TabHome = () => (
+    <Tab.Navigator initialRouteName="UserProfile">
+        <Tab.Screen
+            name="UserProfile"
+            component={UserProfileScreen}
+            options={{
+                headerShown: false,
+                tabBarLabel: "Thông tin người dùng",
+                tabBarIcon: () => (
+                    <AntDesign name="user" size={24} color="black" />
+                ),
+            }}
+        />
+        <Tab.Screen
+            name="UserAuction"
+            component={UserAuctionScreen}
+            options={{
+                headerShown: false,
+                tabBarLabel: "Các đấu giá của bạn",
+                tabBarIcon: () => (
+                    <FontAwesome name="feed" size={24} color="black" />
+                ),
+            }}
+        />
+    </Tab.Navigator>
+)
 
 const HomeStack = (props) => {
     return (
         <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
                 name="Home"
-                component={HomeScreen}
-                options={{ headerTitle: () => <AppBar {...props} /> }}
+                component={TabHome}
+                options={{ headerShown: false }}
             />
-            <Stack.Screen name="User" component={UserScreen} />
-            <Stack.Screen name="PostDetail" component={PostDetailScreen} />
-            <Stack.Screen name="Search" component={SearchSreen} />
         </Stack.Navigator>
     )
 }
+
 export default HomeStack

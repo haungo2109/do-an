@@ -10,6 +10,13 @@ export const getCurrenUserAction = createAsyncThunk(
         return response
     }
 )
+export const getUserBaseInfoAction = createAsyncThunk(
+    "users/getUserBaseInfoAction",
+    async (uid) => {
+        const response = await userApi.getUserInfo(uid)
+        return response
+    }
+)
 export const pushTokenUserAction = createAsyncThunk(
     "users/postPushTokenUser",
     async (data) => {

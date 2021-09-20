@@ -11,8 +11,10 @@ import { Dimensions, FlatList, Image, View } from "react-native"
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
 const Container = styled.View`
+    height: ${(props) => props.heightContainer};
     margin-bottom: 10px;
     background-color: ${Colors.gray};
+    justify-content: space-between;
 `
 const Header = styled.View`
     height: 50px;
@@ -60,7 +62,7 @@ export const Photo = styled.Image`
 export const WrapperImage = styled.View`
     max-height: 500px;
     min-height: 400px;
-    width: ${windowWidth};
+    width: ${windowWidth}px;
     justify-content: center;
     align-items: center;
 `
@@ -123,13 +125,16 @@ function Auction({
         dispatch(dislikeAuction(id))
     }
     return (
-        <Container>
+        <Container
+            heightContainer={auction_images.length === 0 ? "200px" : "600px"}
+        >
             <Header>
                 <Row>
                     <Avatar
                         source={{
                             uri: baseURL + user.avatar,
                         }}
+                        user_id={user.id}
                     />
                     <View style={{ paddingLeft: 10 }}>
                         <User>{user.full_name}</User>

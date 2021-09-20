@@ -15,19 +15,25 @@ const WrapperList = styled.View`
     flex: 1;
 `
 
-function HomeScreen(props) {
+function PostScreen(props) {
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(getCurrenUserAction())
         dispatch(getAllPostAction())
     }, [])
+    const renderHeaderListAuction = () => (
+        <>
+            <MakerPost />
+            <Users />
+        </>
+    )
 
     return (
         <WrapperList>
-            <ListFeed />
+            <ListFeed headerComponent={renderHeaderListAuction} />
         </WrapperList>
     )
 }
 
-export default HomeScreen
+export default PostScreen

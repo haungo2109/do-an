@@ -73,6 +73,7 @@ const MakerAuction = () => {
                     <Row>
                         <AvatarToProfile
                             source={{ uri: baseURL + user.avatar }}
+                            user_id={user.id}
                         />
                         <ButtonType
                             onPress={() =>

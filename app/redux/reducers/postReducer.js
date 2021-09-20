@@ -72,20 +72,20 @@ const postSlice = createSlice({
             })
         })
         builder.addCase(getMorePostAction.fulfilled, (state, action) => {
-            state.data = state.data.concat(action.payload.results)
-            state.nextPage = action.payload.next
+            // state.data = state.data.concat(action.payload.results)
+            // state.nextPage = action.payload.next
             // state = Object.assign(state, {
             //     data: state.data.concat(action.payload.results),
             //     nextPage: action.payload.next,
             //     loading: false,
             //     error: "",
             // })
-            // state = Object.assign(state, {
-            //     data: [...state.data, ...action.payload.results],
-            //     nextPage: action.payload.next,
-            //     loading: false,
-            //     error: "",
-            // })
+            state = Object.assign(state, {
+                data: [...state.data, ...action.payload.results],
+                nextPage: action.payload.next,
+                loading: false,
+                error: "",
+            })
         })
         builder.addCase(getMyPost.fulfilled, (state, action) => {
             state = Object.assign(state, {

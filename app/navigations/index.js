@@ -16,10 +16,12 @@ import { removeAll } from "../utils/AsyncStorage"
 import { logoutAction } from "../redux/actions"
 import Constants from "expo-constants"
 import * as Notifications from "expo-notifications"
-import HomeStack from "./HomeStack"
 import AuctionStack from "./AuctionStack"
 import { pushTokenUserAction } from "../redux/reducers/userReducer"
 import { addNotification } from "../redux/reducers/notificationReducer"
+import PostStack from "./PostStack"
+import HomeStack from "./HomeStack"
+import UserScreen from "../screens/UserScreen"
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -34,7 +36,10 @@ function CustomDrawerContent(props) {
                 onPress={() => {
                     dispatch(logoutAction())
                     removeAll()
-                    props.navigation.navigate("Wellcome")
+                    props.navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Wellcome" }],
+                    })
                 }}
             />
         </DrawerContentScrollView>
@@ -43,12 +48,17 @@ function CustomDrawerContent(props) {
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName="HomeStack"
+            initialRouteName="PostStack"
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
             <Drawer.Screen
                 name="HomeStack"
                 component={HomeStack}
+                options={{ headerShown: false }}
+            />
+            <Drawer.Screen
+                name="PostStack"
+                component={PostStack}
                 options={{ headerShown: false }}
             />
             <Drawer.Screen
@@ -71,7 +81,7 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false,
     }),
 })
-const AppContainer = ({ navigation }) => {
+const AppContainer = (props) => {
     const user = useSelector((state) => state.user)
     const [expoPushToken, setExpoPushToken] = useState("")
     const [notification, setNotification] = useState(false)
@@ -97,7 +107,7 @@ const AppContainer = ({ navigation }) => {
             Notifications.addNotificationResponseReceivedListener(
                 (response) => {
                     console.log("response of tap: ", response)
-                    // navigation.navigate(response.type)
+                    // navigation.jumpTo(response.type)
                 }
             )
 
@@ -117,18 +127,14 @@ const AppContainer = ({ navigation }) => {
                 component={WellcomeScreen}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen
-                name="Login"
-                component={(props) => (
-                    <LoginScreen {...props} expoPushToken={expoPushToken} />
-                )}
-            />
+            <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
             <Stack.Screen
                 name="App"
                 component={AppDrawer}
                 options={{ headerShown: false }}
             />
+            <Stack.Screen name="User" component={UserScreen} />
         </Stack.Navigator>
     )
 }

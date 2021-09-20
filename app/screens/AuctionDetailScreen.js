@@ -143,6 +143,7 @@ function AuctionDetailScreen({ route }) {
                             source={{
                                 uri: baseURL + user.avatar,
                             }}
+                            user_id={user.id}
                         />
                         <WrapperInput>
                             <TextInput
@@ -179,6 +180,7 @@ const ItemComment = ({ user, content, price, status_transaction }) => {
                     source={{
                         uri: baseURL + user.avatar,
                     }}
+                    user_id={user.id}
                 />
                 <CommentText>
                     {content}
