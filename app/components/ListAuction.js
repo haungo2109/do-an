@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/core"
 import React, { useCallback, useEffect, useState } from "react"
-import { ActivityIndicator, FlatList, ScrollView } from "react-native"
+import {
+    ActivityIndicator,
+    ActivityIndicatorBase,
+    FlatList,
+    RefreshControl,
+    ScrollView,
+} from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import useModelMenu from "../hooks/useModelMenu"
@@ -12,18 +18,20 @@ import { fetchAuctionComment } from "../redux/reducers/commentReducer"
 import Auction from "./Auction"
 import MakerAuction from "./MakerAuction"
 
-const WrapperActivityIndicator = styled.View`
+export const WrapperActivityIndicator = styled.View`
     justify-content: center;
     align-items: center;
     margin: 10px 0px;
 `
-const TextEndFooter = styled.Text``
+export const TextEndFooter = styled.Text``
 
 function ListAuction(props) {
     const dispatch = useDispatch()
     const [refreshing, setRefreshing] = useState(false)
+    const [hasScrolled, setHasScrolled] = useState(false)
+
     const user = useSelector((state) => state.user)
-    const { data, nextPage } = useSelector((state) => state.auction)
+    const { data, nextPage, loading } = useSelector((state) => state.auction)
     const { showModelMenu } = useModelMenu()
     const navigation = useNavigation()
 
@@ -52,6 +60,9 @@ function ListAuction(props) {
         navigation.navigate("AuctionDetail", { auctionIndex: index })
     }
     const handleLoadMore = () => {
+        if (!hasScrolled) {
+            return null
+        }
         if (nextPage) dispatch(getMoreAuctionAction(nextPage))
     }
     const renderFooter = () => {
@@ -65,23 +76,25 @@ function ListAuction(props) {
             </WrapperActivityIndicator>
         )
     }
-    const handleRefresh = useCallback(async () => {
+    const onRefresh = useCallback(async () => {
         setRefreshing(true)
         await dispatch(getAllAuctionAction())
         setRefreshing(false)
     }, [])
     return (
-        <ScrollView>
-            <MakerAuction />
+        <>
             <FlatList
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                onScroll={() => {
+                    setHasScrolled(true)
+                }}
                 nestedScrollEnabled
                 extraData={data}
                 contentContainerStyle={{
                     flexDirection: "column",
                     width: "100%",
                 }}
-                onRefresh={handleRefresh}
-                refreshing={refreshing}
                 data={data}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
@@ -100,8 +113,10 @@ function ListAuction(props) {
                     else return null
                 }}
                 ListFooterComponent={renderFooter}
+                ListHeaderComponent={() => <MakerAuction />}
             />
-        </ScrollView>
+            {loading && <ActivityIndicatorBase size="large" color="#0000ff" />}
+        </>
     )
 }
 

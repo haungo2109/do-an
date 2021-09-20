@@ -93,7 +93,6 @@ const auctionSlice = createSlice({
             })
         })
         builder.addCase(getMoreAuctionAction.fulfilled, (state, action) => {
-            console.log(action.payload)
             state = Object.assign(state, {
                 data: [...state.data, ...action.payload.results],
                 nextPage: action.payload.next,

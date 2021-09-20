@@ -48,5 +48,9 @@ const userApi = {
         const url = `/user/${id}/`
         return api.patch(url, data)
     },
+    pushTokenUser: (data) => {
+        const url = `/user/push-token/`
+        return api.push(url, data)
+    },
 }
 export default userApi

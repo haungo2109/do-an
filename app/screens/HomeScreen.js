@@ -8,20 +8,15 @@ import styled from "styled-components/native"
 import { useDispatch, useSelector } from "react-redux"
 import { getCurrenUserAction } from "../redux/reducers/userReducer"
 import { getAllPostAction } from "../redux/reducers/postReducer"
+import Colors from "../config/Colors"
 
-const Container = styled.SafeAreaView`
+const WrapperList = styled.View`
+    background-color: ${Colors.gray2};
     flex: 1;
 `
 
 function HomeScreen(props) {
-    const [refreshing, setRefreshing] = useState(false)
     const dispatch = useDispatch()
-
-    const onRefresh = useCallback(async () => {
-        setRefreshing(true)
-        await dispatch(getAllPostAction())
-        setRefreshing(false)
-    }, [])
 
     useEffect(() => {
         dispatch(getCurrenUserAction())
@@ -29,22 +24,9 @@ function HomeScreen(props) {
     }, [])
 
     return (
-        <>
-            <Container>
-                <ScrollView
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
-                    <MakerPost />
-                    <Users />
-                    <ListFeed />
-                </ScrollView>
-            </Container>
-        </>
+        <WrapperList>
+            <ListFeed />
+        </WrapperList>
     )
 }
 

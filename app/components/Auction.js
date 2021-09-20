@@ -7,7 +7,8 @@ import { dislikeAuction, likeAuction } from "../redux/reducers/auctionReducer"
 import { Entypo, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons"
 import Avatar from "./Avatar"
 import { baseURL } from "../api/apiClient"
-import { View } from "react-native"
+import { Dimensions, FlatList, Image, View } from "react-native"
+const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
 const Container = styled.View`
     margin-bottom: 10px;
@@ -49,58 +50,22 @@ const TextTitle = styled.Text`
     font-size: ${Font.big};
     font-weight: bold;
 `
-const TextBasePrice = styled.Text`
-    font-size: ${Font.big};
-    font-weight: bold;
-`
-// deadline
-// status_auction
-// category
-const TextCondition = styled.Text`
-    font-size: ${Font.big};
-    font-weight: bold;
-`
-const TextDeadline = styled.Text`
-    font-size: ${Font.big};
-    font-weight: bold;
-`
-const TextHashTag = styled(Auction)`
-    background-color: ${Colors.gray2};
-    margin-left: 11px;
-    margin-top: 2px;
-    padding: 0 2px;
-    border-radius: 3px;
-`
-const WrapperTextHashTag = styled.View`
-    flex-direction: row;
-    flex-wrap: wrap;
-`
-const Photo = styled.Image`
-    /* margin-top: 2px; */
-    /* margin-right: 5px; */
-    /* width: 500px; */
+
+export const Photo = styled.Image`
     height: 100%;
+    width: 100%;
+    flex: 1;
 `
 
-const WrapperImage = styled.View`
-    height: 300px;
+export const WrapperImage = styled.View`
+    max-height: 500px;
+    min-height: 400px;
+    width: ${windowWidth};
+    justify-content: center;
+    align-items: center;
 `
 const Footer = styled.View`
     padding: 0 11px;
-`
-const FooterCount = styled.View`
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 9px 0;
-`
-const IconCount = styled.View`
-    background: #1878f3;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    align-items: center;
-    justify-content: center;
-    margin-right: 6px;
 `
 const Separator = styled.View`
     width: 100%;
@@ -215,17 +180,21 @@ function Auction({
                 <TextContent>Giá cơ bản: {base_price}</TextContent>
                 <TextContent>Hạn đấu giá: {deadline.slice(0, 10)}</TextContent>
             </WrapperText>
-            {auction_images?.length !== 0 && (
-                <WrapperImage horizontal showsHorizontalScrollIndicator={false}>
-                    {/* {auction_images.map((c) => (
-                        ))} */}
-                    <Photo
-                        style={{ resizeMode: "contain" }}
-                        // key={c}
-                        source={{ uri: baseURL + auction_images[0] }}
-                    />
-                </WrapperImage>
-            )}
+            {auction_images?.length !== 0 ? (
+                <FlatList
+                    data={auction_images}
+                    keyExtractor={(_, index) => index.toString()}
+                    horizontal
+                    pagingEnabled
+                    style={{ flex: 1 }}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <WrapperImage>
+                            <Photo source={{ uri: baseURL + item }} />
+                        </WrapperImage>
+                    )}
+                />
+            ) : null}
             <Footer>
                 <Separator />
                 <FooterMenu>
