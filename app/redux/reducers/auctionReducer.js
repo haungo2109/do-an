@@ -18,6 +18,13 @@ export const getMoreAuctionAction = createAsyncThunk(
         return response
     }
 )
+export const getOneAuctionAction = createAsyncThunk(
+    "auction/fetchOneAuction",
+    async (id) => {
+        const response = await auctionApi.getAuction(id)
+        return response
+    }
+)
 export const getMyAuction = createAsyncThunk(
     "auction/fetchMyAuction",
     async () => {

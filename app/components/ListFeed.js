@@ -26,9 +26,8 @@ function ListFeed(props) {
     const [hasScrolled, setHasScrolled] = useState(false)
 
     const user = useSelector((state) => state.user)
-    const { data, loading, nextPage } = useSelector((state) => state.post)
+    const { data, nextPage } = useSelector((state) => state.post)
     const { showModelMenu } = useModelMenu()
-    const navigation = useNavigation()
 
     const handlePressMenu = (uid, post) => {
         if (user.id === uid)
@@ -51,10 +50,6 @@ function ListFeed(props) {
         }
         if (nextPage) dispatch(getMorePostAction(nextPage))
     }
-    const navigatePostDetail = async (index, id) => {
-        await dispatch(fetchPostComment(id))
-        navigation.navigate("PostDetail", { postIndex: index })
-    }
     const renderFooter = () => {
         return nextPage ? (
             <WrapperActivityIndicator>
@@ -68,15 +63,13 @@ function ListFeed(props) {
         setRefreshing(false)
     }, [])
 
-    const renderItem = ({ item, index }) => {
+    const renderItem = ({ item }) => {
         if (item?.user)
             return (
                 <Feed
                     {...item}
-                    index={index}
                     isLike={checkLiked(item.like)}
                     handlePressMenu={handlePressMenu}
-                    goPostDetail={navigatePostDetail}
                 />
             )
         else return null

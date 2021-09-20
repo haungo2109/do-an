@@ -9,10 +9,16 @@ import Colors from "../config/Colors"
 import Font from "../config/Font"
 import useModelMenu from "../hooks/useModelMenu"
 import { FontAwesome } from "@expo/vector-icons"
-import { sendAuctionComment } from "../redux/reducers/commentReducer"
+import {
+    fetchAuctionComment,
+    sendAuctionComment,
+} from "../redux/reducers/commentReducer"
 import { Picker } from "@react-native-picker/picker"
 import { Field, SubmitButton, TextSubmitButton } from "../components/ModelEdit"
-import { changeStatusAuctionComment } from "../redux/reducers/auctionReducer"
+import {
+    changeStatusAuctionComment,
+    getOneAuctionAction,
+} from "../redux/reducers/auctionReducer"
 
 const WrapperComment = styled.View`
     padding: 0px 11px;
@@ -80,18 +86,25 @@ const TextStatusComment = styled.Text`
 
 function AuctionDetailScreen({ route }) {
     const dispatch = useDispatch()
-    const { auctionIndex } = route.params
+
+    const [item, setItem] = useState(route.params)
+    const [inputComment, setInputComment] = useState("")
+    const [inputPrice, setInputPrice] = useState("")
 
     const { data } = useSelector((state) => state.comment)
     const user = useSelector((state) => state.user)
-    const item = useSelector((state) => state.auction.data[auctionIndex])
-    const [inputComment, setInputComment] = useState("")
-    const [inputPrice, setInputPrice] = useState("")
     const { showModelMenu } = useModelMenu()
 
     useEffect(() => {
-        console.log(item)
-    })
+        dispatch(fetchAuctionComment(item.id))
+        if (!item?.user) {
+            dispatch(getOneAuctionAction(item.id))
+                .unwrap()
+                .then((res) => {
+                    setItem(res)
+                })
+        }
+    }, [])
 
     const handlePressMenu = (uid, auction) => {
         if (user.id === uid)
@@ -122,53 +135,57 @@ function AuctionDetailScreen({ route }) {
             {item?.user && (
                 <Auction {...item} handlePressMenu={handlePressMenu} />
             )}
-
-            <WrapperComment>
-                {data.map((c) => (
-                    <ItemComment
-                        user={c.user}
-                        content={c.content}
-                        price={c.price}
-                        status_transaction={c.status_transaction}
-                        key={c.id}
-                    />
-                ))}
-                {user.id === item.user.id ? (
-                    item.status_auction === "being auctioned" ? (
-                        <SelectStatusComment data={data} auctionId={item.id} />
-                    ) : null
-                ) : (
-                    <WrapperInputComment>
-                        <AvatarToProfile
-                            source={{
-                                uri: baseURL + user.avatar,
-                            }}
-                            user_id={user.id}
+            {item?.user && (
+                <WrapperComment>
+                    {data.map((c) => (
+                        <ItemComment
+                            user={c.user}
+                            content={c.content}
+                            price={c.price}
+                            status_transaction={c.status_transaction}
+                            key={c.id}
                         />
-                        <WrapperInput>
-                            <TextInput
-                                onChangeText={setInputComment}
-                                value={inputComment}
-                                placeholder="Nhập bình luận..."
+                    ))}
+                    {user.id === item.user.id ? (
+                        item.status_auction === "being auctioned" ? (
+                            <SelectStatusComment
+                                data={data}
+                                auctionId={item.id}
                             />
-                            <PriceInput
-                                onChangeText={setInputPrice}
-                                value={inputPrice}
-                                placeholder="Nhập định giá của bạn..."
+                        ) : null
+                    ) : (
+                        <WrapperInputComment>
+                            <AvatarToProfile
+                                source={{
+                                    uri: baseURL + user.avatar,
+                                }}
+                                user_id={user.id}
                             />
-                        </WrapperInput>
-                        <ButtonSendComment onPress={handleSendComment}>
-                            <Icon>
-                                <FontAwesome
-                                    name="send"
-                                    size={24}
-                                    color="black"
+                            <WrapperInput>
+                                <TextInput
+                                    onChangeText={setInputComment}
+                                    value={inputComment}
+                                    placeholder="Nhập bình luận..."
                                 />
-                            </Icon>
-                        </ButtonSendComment>
-                    </WrapperInputComment>
-                )}
-            </WrapperComment>
+                                <PriceInput
+                                    onChangeText={setInputPrice}
+                                    value={inputPrice}
+                                    placeholder="Nhập định giá của bạn..."
+                                />
+                            </WrapperInput>
+                            <ButtonSendComment onPress={handleSendComment}>
+                                <Icon>
+                                    <FontAwesome
+                                        name="send"
+                                        size={24}
+                                        color="black"
+                                    />
+                                </Icon>
+                            </ButtonSendComment>
+                        </WrapperInputComment>
+                    )}
+                </WrapperComment>
+            )}
         </ScrollView>
     )
 }

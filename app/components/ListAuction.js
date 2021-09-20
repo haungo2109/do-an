@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/core"
 import React, { useCallback, useEffect, useState } from "react"
 import { ActivityIndicator, FlatList } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
@@ -8,16 +7,12 @@ import {
     getAllAuctionAction,
     getMoreAuctionAction,
 } from "../redux/reducers/auctionReducer"
-import { fetchAuctionComment } from "../redux/reducers/commentReducer"
 import Auction from "./Auction"
 
 const WrapperActivityIndicator = styled.View`
     justify-content: center;
     align-items: center;
     margin: 10px 0px;
-`
-const TextEndFooter = styled.Text`
-    flex: 1;
 `
 
 function ListAuction(props) {
@@ -26,9 +21,8 @@ function ListAuction(props) {
     const [hasScrolled, setHasScrolled] = useState(false)
 
     const user = useSelector((state) => state.user)
-    const { data, nextPage, loading } = useSelector((state) => state.auction)
+    const { data, nextPage } = useSelector((state) => state.auction)
     const { showModelMenu } = useModelMenu()
-    const navigation = useNavigation()
 
     const handlePressMenu = (uid, auction) => {
         if (user.id === uid)
@@ -49,10 +43,6 @@ function ListAuction(props) {
             return like.includes(user.id)
         }
         return false
-    }
-    const navigateAuctionDetail = async (index, id) => {
-        await dispatch(fetchAuctionComment(id))
-        navigation.navigate("AuctionDetail", { auctionIndex: index })
     }
     const handleLoadMore = () => {
         if (!hasScrolled) {
@@ -90,15 +80,13 @@ function ListAuction(props) {
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item, index }) => {
+            renderItem={({ item }) => {
                 if (item?.user)
                     return (
                         <Auction
                             {...item}
-                            index={index}
                             isLike={checkLiked(item.like)}
                             handlePressMenu={handlePressMenu}
-                            goAuctionDetail={navigateAuctionDetail}
                         />
                     )
                 else return null

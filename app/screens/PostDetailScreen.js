@@ -9,7 +9,11 @@ import Colors from "../config/Colors"
 import Font from "../config/Font"
 import useModelMenu from "../hooks/useModelMenu"
 import { FontAwesome } from "@expo/vector-icons"
-import { sendPostComment } from "../redux/reducers/commentReducer"
+import {
+    fetchPostComment,
+    sendPostComment,
+} from "../redux/reducers/commentReducer"
+import { getOnePostAction } from "../redux/reducers/postReducer"
 
 const WrapperComment = styled.View`
     padding: 0px 11px;
@@ -48,13 +52,24 @@ const Icon = styled.View`
 `
 function PostDetailScreen({ route, navigation }) {
     const dispatch = useDispatch()
-    const { postIndex } = route.params
+
+    const [item, setItem] = useState(route.params)
 
     const { data } = useSelector((state) => state.comment)
     const user = useSelector((state) => state.user)
-    const item = useSelector((state) => state.post.data[postIndex])
     const [inputComment, setInputComment] = useState("")
     const { showModelMenu } = useModelMenu()
+
+    useEffect(() => {
+        dispatch(fetchPostComment(item.id))
+        if (!item?.user) {
+            dispatch(getOnePostAction(item.id))
+                .unwrap()
+                .then((res) => {
+                    setItem(res)
+                })
+        }
+    }, [])
 
     const handlePressMenu = (uid, post) => {
         if (user.id === uid)
@@ -74,8 +89,7 @@ function PostDetailScreen({ route, navigation }) {
     }
     return (
         <ScrollView>
-            <Feed {...item} handlePressMenu={handlePressMenu} />
-
+            {item?.user && <Feed {...item} handlePressMenu={handlePressMenu} />}
             <WrapperComment>
                 {data.map((c) => (
                     <Item user={c.user} content={c.content} key={c.id} />

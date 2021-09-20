@@ -18,10 +18,15 @@ import Constants from "expo-constants"
 import * as Notifications from "expo-notifications"
 import AuctionStack from "./AuctionStack"
 import { pushTokenUserAction } from "../redux/reducers/userReducer"
-import { addNotification } from "../redux/reducers/notificationReducer"
+import {
+    addNotification,
+    setPushToken,
+} from "../redux/reducers/notificationReducer"
 import PostStack from "./PostStack"
 import HomeStack from "./HomeStack"
 import UserScreen from "../screens/UserScreen"
+import { useNavigation } from "@react-navigation/core"
+import IntroductionScreen from "../screens/IntroductionScreen"
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -48,7 +53,7 @@ function CustomDrawerContent(props) {
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName="PostStack"
+            initialRouteName="AuctionStack"
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
             <Drawer.Screen
@@ -71,6 +76,11 @@ const AppDrawer = () => {
                 component={ChatScreen}
                 options={{ headerShown: false }}
             />
+            <Drawer.Screen
+                name="Introduction"
+                component={IntroductionScreen}
+                options={{ headerShown: false }}
+            />
         </Drawer.Navigator>
     )
 }
@@ -83,33 +93,43 @@ Notifications.setNotificationHandler({
 })
 const AppContainer = (props) => {
     const user = useSelector((state) => state.user)
-    const [expoPushToken, setExpoPushToken] = useState("")
-    const [notification, setNotification] = useState(false)
     const notificationListener = useRef()
     const responseListener = useRef()
     const dispatch = useDispatch()
+    const navigation = useNavigation()
 
     useEffect(() => {
         registerForPushNotificationsAsync().then((token) => {
-            setExpoPushToken(token)
+            dispatch(setPushToken(token))
         })
 
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current =
             Notifications.addNotificationReceivedListener((notification) => {
-                setNotification(notification)
                 console.log("notification is: ", notification)
-                // dispatch(addNotification({notification}))
+                let { data, title, body } = notification.request.content
+                dispatch(
+                    addNotification({ title, body, ...data, isSeen: false })
+                )
             })
 
         // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
         responseListener.current =
-            Notifications.addNotificationResponseReceivedListener(
-                (response) => {
-                    console.log("response of tap: ", response)
-                    // navigation.jumpTo(response.type)
+            Notifications.addNotificationResponseReceivedListener((res) => {
+                console.log("response of tap: ", res)
+                const { data } = res?.notification?.request?.content
+                console.log("props is: ", props)
+                if (data.obj === "auction") {
+                    navigation.navigate("AuctionDetail", {
+                        id: data.id,
+                    })
                 }
-            )
+                if (data.obj === "post") {
+                    navigation.navigate("PostDetail", {
+                        id: data.id,
+                    })
+                }
+            })
 
         return () => {
             Notifications.removeNotificationSubscription(
@@ -120,6 +140,7 @@ const AppContainer = (props) => {
             )
         }
     }, [])
+
     return (
         <Stack.Navigator initialRouteName={user ? "App" : "Wellcome"}>
             <Stack.Screen

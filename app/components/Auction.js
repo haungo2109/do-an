@@ -8,6 +8,7 @@ import { Entypo, AntDesign, MaterialCommunityIcons } from "@expo/vector-icons"
 import Avatar from "./Avatar"
 import { baseURL } from "../api/apiClient"
 import { Dimensions, FlatList, Image, View } from "react-native"
+import { useNavigation } from "@react-navigation/core"
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
 const Container = styled.View`
@@ -106,8 +107,6 @@ function Auction({
     user,
     count_comment,
     handlePressMenu,
-    goAuctionDetail,
-    index,
     title,
     base_price,
     condition,
@@ -116,6 +115,7 @@ function Auction({
     category,
 }) {
     const dispatch = useDispatch()
+    const navigation = useNavigation()
 
     const handleLikeButton = () => {
         dispatch(likeAuction(id))
@@ -220,7 +220,22 @@ function Auction({
 
                     <Button
                         onPress={() => {
-                            goAuctionDetail(index, id)
+                            navigation.navigate("AuctionDetail", {
+                                content,
+                                create_at,
+                                id,
+                                like,
+                                isLike,
+                                auction_images,
+                                user,
+                                count_comment,
+                                title,
+                                base_price,
+                                condition,
+                                deadline,
+                                status_auction,
+                                category,
+                            })
                         }}
                     >
                         <Icon>

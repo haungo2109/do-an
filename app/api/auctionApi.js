@@ -20,7 +20,7 @@ const auctionApi = {
         return api.get(url)
     },
     getAuction: (auctionId) => {
-        const url = `/auction/${auctionId}`
+        const url = `/auction/${auctionId}/`
         return api.get(url)
     },
     getAuctionComment: (auctionId) => {

@@ -17,6 +17,13 @@ export const getMorePostAction = createAsyncThunk(
         return response
     }
 )
+export const getOnePostAction = createAsyncThunk(
+    "auction/fetchOnePost",
+    async (id) => {
+        const response = await postApi.getPost(id)
+        return response
+    }
+)
 export const getMyPost = createAsyncThunk("post/fetchMyPost", async () => {
     const response = await postApi.getPostOwner()
     return response

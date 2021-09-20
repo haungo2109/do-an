@@ -9,6 +9,7 @@ import { dislikePost, likePost } from "../redux/reducers/postReducer"
 import Colors from "../config/Colors"
 import Font from "../config/Font"
 import { Photo, WrapperImage } from "./Auction"
+import { useNavigation } from "@react-navigation/core"
 
 const Container = styled.View`
     height: ${(props) => props.heightContainer};
@@ -111,10 +112,9 @@ const Feed = ({
     user,
     count_comment,
     handlePressMenu,
-    goPostDetail,
-    index,
 }) => {
     const dispatch = useDispatch()
+    const navigation = useNavigation()
 
     const handleLikeButton = () => {
         dispatch(likePost(id))
@@ -211,7 +211,17 @@ const Feed = ({
 
                     <Button
                         onPress={() => {
-                            goPostDetail(index, id)
+                            navigation.navigate("PostDetail", {
+                                content,
+                                create_at,
+                                hashtag,
+                                id,
+                                like,
+                                isLike,
+                                post_images,
+                                user,
+                                count_comment,
+                            })
                         }}
                     >
                         <Icon>
