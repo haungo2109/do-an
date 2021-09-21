@@ -53,7 +53,7 @@ function CustomDrawerContent(props) {
 const AppDrawer = () => {
     return (
         <Drawer.Navigator
-            initialRouteName="AuctionStack"
+            initialRouteName="HomeStack"
             drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
             <Drawer.Screen

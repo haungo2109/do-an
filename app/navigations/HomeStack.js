@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
 const TabHome = () => (
-    <Tab.Navigator initialRouteName="Notification">
+    <Tab.Navigator initialRouteName="UserAuction">
         <Tab.Screen
             name="UserProfile"
             component={UserProfileScreen}

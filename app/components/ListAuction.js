@@ -15,7 +15,7 @@ const WrapperActivityIndicator = styled.View`
     margin: 10px 0px;
 `
 
-function ListAuction(props) {
+function ListAuction({ handleRefresh, headerComponent }) {
     const dispatch = useDispatch()
     const [refreshing, setRefreshing] = useState(false)
     const [hasScrolled, setHasScrolled] = useState(false)
@@ -59,7 +59,8 @@ function ListAuction(props) {
     }
     const onRefresh = useCallback(async () => {
         setRefreshing(true)
-        await dispatch(getAllAuctionAction())
+        if (handleRefresh) await handleRefresh()
+        else await dispatch(getMyAuction())
         setRefreshing(false)
     }, [])
 
@@ -92,9 +93,7 @@ function ListAuction(props) {
                 else return null
             }}
             ListFooterComponent={renderFooter}
-            ListHeaderComponent={
-                props?.headerComponent && props.headerComponent
-            }
+            ListHeaderComponent={headerComponent}
         />
     )
 }

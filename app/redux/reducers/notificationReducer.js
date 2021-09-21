@@ -32,7 +32,7 @@ const notificationSlice = createSlice({
         removeANotification: (state, action) => {
             const id = action.payload
             let data = state.data.map((c) =>
-                c.id === id ? { ...c, isSeeen: true } : c
+                c.id === id ? { ...c, isSeen: true } : c
             )
             state = Object.assign(state, { ...state, data })
         },

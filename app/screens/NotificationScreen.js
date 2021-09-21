@@ -16,6 +16,7 @@ const WrapperItemButton = styled.TouchableOpacity`
     background-color: ${(props) => props.bgcolor};
     justify-content: center;
     padding-left: 11px;
+    margin-top: 2px;
 `
 const TextTitleCus = styled(TextTitle)`
     margin-bottom: 5px;
@@ -29,20 +30,23 @@ function NotificationScreen(props) {
 
     useEffect(() => {
         console.log("data notification: ", data)
-    })
+    }, [data])
     const handlePress = (item) => {
         if (item.obj === "introduction") {
-            // navigation.navigate("Introduction")
+            navigation.navigate("Introduction")
             dispatch(removeANotification(item.id))
         }
-        if (data.obj === "auction") {
+        if (item.obj === "auction") {
             navigation.navigate("AuctionDetail", {
-                id: data.id,
+                id: item.id,
             })
+            dispatch(removeANotification(item.id))
         }
-        if (data.obj === "post") {
+        if (item.obj === "post") {
+            dispatch(removeANotification(item.id))
+
             navigation.navigate("PostDetail", {
-                id: data.id,
+                id: item.id,
             })
         }
     }
@@ -54,7 +58,7 @@ function NotificationScreen(props) {
                     <WrapperItemButton
                         onPress={() => handlePress(c)}
                         key={c.id}
-                        bgcolor={c.isSeen ? Colors.gray2 : Colors.blue2}
+                        bgcolor={c.isSeen == true ? Colors.gray : Colors.blue2}
                     >
                         <TextTitleCus>{c.title}</TextTitleCus>
                         <TextContent>{c.body}</TextContent>

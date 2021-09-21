@@ -185,10 +185,15 @@ function UserProfileScreen(props) {
             <MakerPost />
         </>
     )
-
+    const handleRefresh = () => {
+        return dispatch(getMyPost())
+    }
     return (
         <Container>
-            <ListFeed headerComponent={renderHeaderListAuction} />
+            <ListFeed
+                headerComponent={renderHeaderListAuction}
+                handleRefresh={handleRefresh}
+            />
         </Container>
     )
 }

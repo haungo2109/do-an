@@ -16,9 +16,16 @@ function UserAuctionScreen(props) {
         dispatch(getMyAuction())
     }, [])
     const renderHeaderListAuction = () => <MakerAuction />
+
+    const handleRefresh = () => {
+        return dispatch(getMyAuction())
+    }
     return (
         <Container>
-            <ListAuction headerComponent={renderHeaderListAuction} />
+            <ListAuction
+                headerComponent={renderHeaderListAuction}
+                handleRefresh={handleRefresh}
+            />
         </Container>
     )
 }

@@ -20,7 +20,7 @@ const TextEndFooter = styled.Text`
     flex: 1;
 `
 
-function ListFeed(props) {
+function ListFeed({ handleRefresh, headerComponent }) {
     const dispatch = useDispatch()
     const [refreshing, setRefreshing] = useState(false)
     const [hasScrolled, setHasScrolled] = useState(false)
@@ -59,7 +59,8 @@ function ListFeed(props) {
     }
     const onRefresh = useCallback(async () => {
         setRefreshing(true)
-        await dispatch(getAllPostAction())
+        if (handleRefresh) await handleRefresh()
+        else await dispatch(getAllPostAction())
         setRefreshing(false)
     }, [])
 
@@ -98,9 +99,7 @@ function ListFeed(props) {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={renderItem}
                 ListFooterComponent={renderFooter}
-                ListHeaderComponent={
-                    props?.headerComponent && props.headerComponent
-                }
+                ListHeaderComponent={headerComponent}
             />
         </>
     )

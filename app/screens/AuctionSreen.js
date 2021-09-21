@@ -4,14 +4,12 @@ import { ScrollView } from "react-native-gesture-handler"
 import { useDispatch } from "react-redux"
 import styled from "styled-components/native"
 import ListAuction from "../components/ListAuction"
+import MakerAuction from "../components/MakerAuction"
 import MakerPost from "../components/MakerPost"
 import { getAllAuctionAction } from "../redux/reducers/auctionReducer"
 import { getCategoryAction } from "../redux/reducers/categoryAuctionReducer"
 
 const Container = styled.SafeAreaView`
-    flex: 1;
-`
-const WrapperFlatList = styled.View`
     flex: 1;
 `
 
@@ -22,11 +20,12 @@ function AuctionScreen(props) {
         dispatch(getAllAuctionAction())
         dispatch(getCategoryAction())
     })
+    const renderHeaderListAuction = () => <MakerAuction />
 
     return (
         <>
             <Container>
-                <ListAuction />
+                <ListAuction headerComponent={renderHeaderListAuction} />
             </Container>
         </>
     )

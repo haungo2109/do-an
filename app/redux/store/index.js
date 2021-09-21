@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+import devToolsEnhancer from "remote-redux-devtools"
 import rootReducer from "../reducers"
 
 import {

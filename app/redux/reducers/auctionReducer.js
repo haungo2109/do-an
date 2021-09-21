@@ -41,12 +41,13 @@ export const updateAuction = createAsyncThunk(
 )
 export const changeStatusAuctionComment = createAsyncThunk(
     "auction/changeStatusAuctionComment",
-    async ({ auctionId, comId, state }, thunkAPI) => {
-        const response = await auctionApi
-            .changeStateAuctionComment(auctionId, comId, state)
-            .then((res) => {
-                thunkAPI.dispatch(changeStatusCommentAuction(response))
-            })
+    async ({ auctionId, commentId, statusComment }, thunkAPI) => {
+        const response = await auctionApi.changeStateAuctionComment(
+            auctionId,
+            commentId,
+            statusComment
+        )
+        thunkAPI.dispatch(changeStatusCommentAuction(response))
         return response
     }
 )

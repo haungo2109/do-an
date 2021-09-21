@@ -54,7 +54,6 @@ const commentSlice = createSlice({
             })
         })
         builder.addCase(fetchAuctionComment.fulfilled, (state, action) => {
-            console.log("fetchAuctionComment.fulfilled", action.payload)
             state = Object.assign(state, {
                 ...state,
                 data: action.payload,

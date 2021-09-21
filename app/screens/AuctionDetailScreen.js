@@ -151,6 +151,7 @@ function AuctionDetailScreen({ route }) {
                             <SelectStatusComment
                                 data={data}
                                 auctionId={item.id}
+                                setItem={setItem}
                             />
                         ) : null
                     ) : (
@@ -215,6 +216,7 @@ const ItemComment = ({ user, content, price, status_transaction }) => {
 const SelectStatusComment = ({
     data,
     auctionId,
+    setItem,
     statusComment = "in_process",
 }) => {
     const dispatch = useDispatch()
@@ -223,12 +225,14 @@ const SelectStatusComment = ({
         dispatch(
             changeStatusAuctionComment({
                 auctionId,
-                comId: parseInt(commentSelect),
+                commentId: parseInt(commentSelect),
                 statusComment,
             })
         )
-        console.log("press submit", auctionId)
-        console.log("press submit", commentSelect)
+            .unwrap()
+            .then((res) => {
+                setItem((s) => ({ ...s, status_auction: res.status_auction }))
+            })
     }
     return (
         <>
