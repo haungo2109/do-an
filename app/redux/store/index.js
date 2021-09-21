@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import devToolsEnhancer from "remote-redux-devtools"
-import rootReducer from "../reducers"
+import reducers from "../reducers"
 
 import {
     persistStore,
@@ -19,13 +18,26 @@ const persistConfig = {
     key: "root",
     version: 1,
     storage: AsyncStorage,
-    whitelist: ["user", "categoryAuction", "reportType", "notification"],
+    whitelist: [
+        "user",
+        "categoryAuction",
+        "reportType",
+        "notification",
+        "paymentMethod",
+    ],
 }
 
-const persistedReducer = persistReducer(
-    persistConfig,
-    combineReducers(rootReducer)
-)
+const combinedReducer = combineReducers(reducers)
+
+const rootReducer = (state, action) => {
+    if (action.type === "USER_LOGOUT") {
+        state = undefined
+        AsyncStorage.removeItem("persist:root")
+    }
+    return combinedReducer(state, action)
+}
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({
     reducer: persistedReducer,

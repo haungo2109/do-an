@@ -6,7 +6,6 @@ import MakerPost from "../components/MakerPost"
 import Users from "../components/Users"
 import styled from "styled-components/native"
 import { useDispatch, useSelector } from "react-redux"
-import { getCurrenUserAction } from "../redux/reducers/userReducer"
 import { getAllPostAction } from "../redux/reducers/postReducer"
 import Colors from "../config/Colors"
 
@@ -19,7 +18,6 @@ function PostScreen(props) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(getCurrenUserAction())
         dispatch(getAllPostAction())
     }, [])
     const renderHeaderListAuction = () => (

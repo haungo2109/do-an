@@ -7,7 +7,6 @@ import ListAuction from "../components/ListAuction"
 import MakerAuction from "../components/MakerAuction"
 import MakerPost from "../components/MakerPost"
 import { getAllAuctionAction } from "../redux/reducers/auctionReducer"
-import { getCategoryAction } from "../redux/reducers/categoryAuctionReducer"
 
 const Container = styled.SafeAreaView`
     flex: 1;
@@ -18,7 +17,6 @@ function AuctionScreen(props) {
 
     useEffect(() => {
         dispatch(getAllAuctionAction())
-        dispatch(getCategoryAction())
     })
     const renderHeaderListAuction = () => <MakerAuction />
 

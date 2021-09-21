@@ -17,7 +17,10 @@ import { logoutAction } from "../redux/actions"
 import Constants from "expo-constants"
 import * as Notifications from "expo-notifications"
 import AuctionStack from "./AuctionStack"
-import { pushTokenUserAction } from "../redux/reducers/userReducer"
+import {
+    getCurrenUserAction,
+    pushTokenUserAction,
+} from "../redux/reducers/userReducer"
 import {
     addNotification,
     setPushToken,
@@ -27,6 +30,9 @@ import HomeStack from "./HomeStack"
 import UserScreen from "../screens/UserScreen"
 import { useNavigation } from "@react-navigation/core"
 import IntroductionScreen from "../screens/IntroductionScreen"
+import { getPaymentMethodAction } from "../redux/reducers/paymentMethodReducer"
+import { getReportTypeAction } from "../redux/reducers/reportReducer"
+import { getCategoryAction } from "../redux/reducers/categoryAuctionReducer"
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -51,6 +57,12 @@ function CustomDrawerContent(props) {
     )
 }
 const AppDrawer = () => {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(getCurrenUserAction())
+    }, [])
+
     return (
         <Drawer.Navigator
             initialRouteName="HomeStack"
@@ -99,6 +111,10 @@ const AppContainer = (props) => {
     const navigation = useNavigation()
 
     useEffect(() => {
+        dispatch(getPaymentMethodAction())
+        dispatch(getReportTypeAction())
+        dispatch(getCategoryAction())
+
         registerForPushNotificationsAsync().then((token) => {
             dispatch(setPushToken(token))
         })

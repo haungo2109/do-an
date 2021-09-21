@@ -6,8 +6,9 @@ import auctionReducer from "./auctionReducer"
 import categoryAuctionReducer from "./categoryAuctionReducer"
 import reportReducer from "./reportReducer"
 import notificationReducer from "./notificationReducer"
+import paymentMethodReducer from "./paymentMethodReducer"
 
-const rootReducer = {
+const reducers = {
     user: userReducer,
     post: postReducer,
     auction: auctionReducer,
@@ -16,6 +17,7 @@ const rootReducer = {
     categoryAuction: categoryAuctionReducer,
     reportType: reportReducer,
     notification: notificationReducer,
+    paymentMethod: paymentMethodReducer,
 }
 
-export default rootReducer
+export default reducers

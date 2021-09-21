@@ -9,10 +9,7 @@ import ListFeed from "../components/ListFeed"
 import { ScrollView } from "react-native"
 import useModelEdit from "../hooks/useModelEdit"
 import useModelImageSelection from "../hooks/useModelImageSelection"
-import {
-    getCurrenUserAction,
-    updateCurrenUserAction,
-} from "../redux/reducers/userReducer"
+import { updateCurrenUserAction } from "../redux/reducers/userReducer"
 import MakerPost from "../components/MakerPost"
 
 const Container = styled.SafeAreaView`
@@ -86,7 +83,6 @@ const ItemInfo = styled.View`
 `
 
 function UserProfileScreen(props) {
-    // const {user_id} = props.route.params;
     const dispatch = useDispatch()
     const user = useSelector((state) => state.user)
     const { images } = useSelector((state) => state.controller.imageSelection)
@@ -94,7 +90,6 @@ function UserProfileScreen(props) {
     const { showModelImageSelection } = useModelImageSelection(1, 1)
 
     useEffect(() => {
-        dispatch(getCurrenUserAction())
         dispatch(getMyPost())
     }, [])
     useEffect(() => {

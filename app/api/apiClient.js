@@ -42,7 +42,7 @@ const handleError = (err) => {
     const { status, data } = err.response
 
     if (status === 404 && data?.detail)
-        return Promise.reject("Đối tượng này không tồn tại, vui lòng tải lại.")
+        return Promise.reject("Đối tượng này đã bị xóa!!!.")
     if (status === 400 && data?.username)
         return Promise.reject("Username này đã đăng ký.")
     if (status === 400 && data?.deadline)

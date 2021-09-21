@@ -40,7 +40,6 @@
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
     "redux-persist": "^6.0.0",
-    "remote-redux-devtools": "^0.5.16",
     "styled-components": "^5.3.1"
   },
   "devDependencies": {

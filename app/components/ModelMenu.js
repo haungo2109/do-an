@@ -14,7 +14,11 @@ import { deletePostAction } from "../redux/reducers/postReducer"
 import useModelEdit from "../hooks/useModelEdit"
 import useModelMenu from "../hooks/useModelMenu"
 import { baseURL } from "../api/apiClient"
-import { deleteAuctionAction } from "../redux/reducers/auctionReducer"
+import {
+    changeStatusAuctionComment,
+    deleteAuctionAction,
+    setFailAuctionAction,
+} from "../redux/reducers/auctionReducer"
 import { Alert, Modal } from "react-native"
 import { Picker } from "@react-native-picker/picker"
 import Font from "../config/Font"
@@ -220,6 +224,48 @@ const ModelMenu = () => {
             text: "Báo cáo bài viết",
             handle: () => {
                 setModalVisible(true)
+            },
+        },
+        setFailComment: {
+            icon: <AntDesign name="minus" size={25} color="black" />,
+            text: "Hủy giao dịch này",
+            handle: () => {
+                dispatch(
+                    changeStatusAuctionComment({
+                        auctionId: id,
+                        commentId: data.commentId,
+                        statusComment: "fail",
+                    })
+                )
+                    .unwrap()
+                    .then(() => hiddenModelMenu())
+                    .catch((err) => Alert.alert(err.message))
+            },
+        },
+        setSuccessComment: {
+            icon: <AntDesign name="check" size={24} color="black" />,
+            text: "Giao dịch đã thành công",
+            handle: () => {
+                dispatch(
+                    changeStatusAuctionComment({
+                        auctionId: id,
+                        commentId: data.commentId,
+                        statusComment: "success",
+                    })
+                )
+                    .unwrap()
+                    .then(() => hiddenModelMenu())
+                    .catch((err) => Alert.alert(err.message))
+            },
+        },
+        setFailAuction: {
+            icon: <AntDesign name="close" size={24} color="black" />,
+            text: "Hủy đấu giá",
+            handle: () => {
+                dispatch(setFailAuctionAction(id))
+                    .unwrap()
+                    .then(() => hiddenModelMenu())
+                    .catch((err) => Alert.alert(err.message))
             },
         },
     }

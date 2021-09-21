@@ -113,6 +113,7 @@ function Auction({
     deadline,
     status_auction,
     category,
+    payment_method,
 }) {
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -184,6 +185,9 @@ function Auction({
                 <TextContent>Điều kiện: {condition}</TextContent>
                 <TextContent>Giá cơ bản: {base_price}</TextContent>
                 <TextContent>Hạn đấu giá: {deadline.slice(0, 10)}</TextContent>
+                <TextContent>
+                    Phương thức thanh toán: {payment_method}
+                </TextContent>
             </WrapperText>
             {auction_images?.length !== 0 ? (
                 <FlatList

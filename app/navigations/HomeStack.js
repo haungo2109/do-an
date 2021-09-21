@@ -5,6 +5,8 @@ import UserProfileScreen from "../screens/UserProfileScreen"
 import UserAuctionScreen from "../screens/UserAuctionScreen"
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons"
 import NotificationScreen from "../screens/NotificationScreen"
+import AuctionDetailScreen from "../screens/AuctionDetailScreen"
+import PostDetailScreen from "../screens/PostDetailScreen"
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -54,6 +56,11 @@ const HomeStack = (props) => {
                 name="Home"
                 component={TabHome}
                 options={{ headerShown: false }}
+            />
+            <Stack.Screen name="PostDetail" component={PostDetailScreen} />
+            <Stack.Screen
+                name="AuctionDetail"
+                component={AuctionDetailScreen}
             />
         </Stack.Navigator>
     )

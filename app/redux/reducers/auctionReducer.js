@@ -39,6 +39,13 @@ export const updateAuction = createAsyncThunk(
         return response
     }
 )
+export const setFailAuctionAction = createAsyncThunk(
+    "auction/setFailAuctionAction",
+    async (id) => {
+        const response = await auctionApi.setFailAuctionState(id)
+        return response
+    }
+)
 export const changeStatusAuctionComment = createAsyncThunk(
     "auction/changeStatusAuctionComment",
     async ({ auctionId, commentId, statusComment }, thunkAPI) => {
@@ -180,6 +187,17 @@ const auctionSlice = createSlice({
             state = Object.assign(state, { loading: true })
         })
         builder.addCase(updateAuction.fulfilled, (state, action) => {
+            let data = action.payload
+            let newState = state.data.map((c) =>
+                c.id != data["id"] ? c : data
+            )
+            state = Object.assign(state, {
+                data: newState,
+                error: "",
+                loading: false,
+            })
+        })
+        builder.addCase(setFailAuctionAction.fulfilled, (state, action) => {
             let data = action.payload
             let newState = state.data.map((c) =>
                 c.id != data["id"] ? c : data

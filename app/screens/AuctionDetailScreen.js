@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { ScrollView } from "react-native"
+import { Alert, ScrollView } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import { baseURL } from "../api/apiClient"
@@ -103,17 +103,29 @@ function AuctionDetailScreen({ route }) {
                 .then((res) => {
                     setItem(res)
                 })
+                .catch((err) => Alert.alert("Lỗi", err.message))
         }
     }, [])
 
     const handlePressMenu = (uid, auction) => {
-        if (user.id === uid)
+        let comment = data.find((c) => c.status_transaction == "in process")
+        if (user.id === uid) {
+            let listChoose = ["editAuction", "deleteAuction"]
+            if (item.status_auction === "in process") {
+                listChoose.push(
+                    "setSuccessComment",
+                    "setFailComment",
+                    "setFailAuction"
+                )
+            } else if (item.status_auction === "being auctioned") {
+                listChoose.push("setFailAuction")
+            }
             showModelMenu({
                 id: auction.id,
-                listChoose: ["editAuction", "deleteAuction"],
-                data: auction,
+                listChoose,
+                data: { ...auction, commentId: comment.id },
             })
-        else
+        } else
             showModelMenu({
                 id: auction.id,
                 listChoose: ["report"],
