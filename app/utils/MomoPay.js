@@ -8,16 +8,16 @@ import RNMomosdk from "react-native-momosdk"
 const RNMomosdkModule = NativeModules.RNMomosdk
 const EventEmitter = new NativeEventEmitter(RNMomosdkModule)
 
-const merchantname = "CGV Cinemas"
-const merchantcode = "CGV01"
-const merchantNameLabel = "Nhà cung cấp"
-const billdescription = "Fast and Furious 8"
-const amount = 50000
+const merchantname = "Kanj Social Network"
+const merchantcode = "Kanj99"
+const merchantNameLabel = "Mạng xã hội"
+const billdescription = "Mạng xã hội từ thiện Kanj"
+const amount = 5000
 const enviroment = "0" //"0": SANBOX , "1": PRODUCTION
 
 import React, { useEffect } from "react"
 
-function MomoPay(props) {
+function MomoPay({ textAmount, amount, description = "", processing = false }) {
     useEffect(() => {
         EventEmitter.addListener(
             "RCTMoMoNoficationCenterRequestTokenReceived",
@@ -61,7 +61,7 @@ function MomoPay(props) {
         jsonData.merchantcode = merchantcode //edit your merchantcode here
         jsonData.merchantnamelabel = merchantNameLabel
         jsonData.description = billdescription
-        jsonData.amount = 5000 //order total amount
+        jsonData.amount = amount //order total amount
         jsonData.orderId = "ID20181123192300"
         jsonData.orderLabel = "Ma don hang"
         jsonData.appScheme = "momocgv20170101" // iOS App Only , match with Schemes Indentify from your  Info.plist > key URL types > URL Schemes

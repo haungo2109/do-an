@@ -38,7 +38,7 @@ const commentSlice = createSlice({
     reducers: {
         changeStatusCommentAuction: (state, action) => {
             const { status_transaction, comment_id } = action.payload
-            console.log("commentReducer: ", { status_transaction, comment_id })
+
             let newState = state.data.map((c) =>
                 c.id == comment_id ? { ...c, status_transaction } : c
             )

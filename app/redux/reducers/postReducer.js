@@ -156,7 +156,6 @@ const postSlice = createSlice({
             })
         })
         builder.addCase(postPostAction.rejected, (state, action) => {
-            console.log("Rejected Action post Post", action)
             state = Object.assign(state, {
                 error: action.error.message || "Unknow error",
                 loading: false,
@@ -177,7 +176,6 @@ const postSlice = createSlice({
             })
         })
         builder.addCase(updatePost.rejected, (state, action) => {
-            console.log("Rejected Action edit Post", action)
             state = Object.assign(state, {
                 error: action.error.message || "Unknow error",
                 loading: false,

@@ -28,9 +28,7 @@ function NotificationScreen(props) {
     const dispatch = useDispatch()
     const data = useSelector((s) => s.notification.data)
 
-    useEffect(() => {
-        console.log("data notification: ", data)
-    }, [data])
+    useEffect(() => {}, [data])
     const handlePress = (item) => {
         if (item.obj === "introduction") {
             navigation.navigate("Introduction")

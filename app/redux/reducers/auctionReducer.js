@@ -191,7 +191,6 @@ const auctionSlice = createSlice({
             })
         })
         builder.addCase(postAuctionAction.rejected, (state, action) => {
-            console.log("Rejected Action auction Auction", action)
             state = Object.assign(state, {
                 error: action.error.message || "Unknow error",
                 loading: false,
@@ -243,7 +242,6 @@ const auctionSlice = createSlice({
             }
         )
         builder.addCase(updateAuction.rejected, (state, action) => {
-            console.log("Rejected Action edit Auction", action)
             state = Object.assign(state, {
                 error: action.error.message || "Unknow error",
                 loading: false,

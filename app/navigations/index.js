@@ -33,6 +33,7 @@ import IntroductionScreen from "../screens/IntroductionScreen"
 import { getPaymentMethodAction } from "../redux/reducers/paymentMethodReducer"
 import { getReportTypeAction } from "../redux/reducers/reportReducer"
 import { getCategoryAction } from "../redux/reducers/categoryAuctionReducer"
+import MomoPaymentScreen from "../screens/MomoPaymentScreen"
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -122,7 +123,6 @@ const AppContainer = (props) => {
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current =
             Notifications.addNotificationReceivedListener((notification) => {
-                console.log("notification is: ", notification)
                 let { data, title, body } = notification.request.content
                 dispatch(
                     addNotification({ title, body, ...data, isSeen: false })
@@ -132,9 +132,8 @@ const AppContainer = (props) => {
         // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
         responseListener.current =
             Notifications.addNotificationResponseReceivedListener((res) => {
-                console.log("response of tap: ", res)
                 const { data } = res?.notification?.request?.content
-                console.log("props is: ", props)
+
                 if (data.obj === "auction") {
                     navigation.navigate("AuctionDetail", {
                         id: data.id,
@@ -158,7 +157,7 @@ const AppContainer = (props) => {
     }, [])
 
     return (
-        <Stack.Navigator initialRouteName={user ? "App" : "Wellcome"}>
+        <Stack.Navigator initialRouteName={"MomoPayment"}>
             <Stack.Screen
                 name="Wellcome"
                 component={WellcomeScreen}
@@ -172,6 +171,7 @@ const AppContainer = (props) => {
                 options={{ headerShown: false }}
             />
             <Stack.Screen name="User" component={UserScreen} />
+            <Stack.Screen name="MomoPayment" component={MomoPaymentScreen} />
         </Stack.Navigator>
     )
 }

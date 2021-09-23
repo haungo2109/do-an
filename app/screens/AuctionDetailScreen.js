@@ -95,7 +95,7 @@ const TextInfo = styled.Text`
     font-size: ${Font.big};
 `
 
-function AuctionDetailScreen({ route }) {
+function AuctionDetailScreen({ route, navigation }) {
     const dispatch = useDispatch()
 
     const [item, setItem] = useState(route.params)
@@ -150,7 +150,12 @@ function AuctionDetailScreen({ route }) {
         return payment[index].name
     }
 
-    const paywithMomo = () => {}
+    const paywithMomo = () => {
+        let comment = data.find((c) => c.status_transaction == "in process")
+        if (comment === undefined) return
+
+        navigation.navigate("MomoPayment", { amount: comment.price })
+    }
     const renderActionForBuyler = () => {
         switch (item.status_auction) {
             case "fail":

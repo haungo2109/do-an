@@ -123,7 +123,6 @@ const ModelEdit = () => {
     }
     useEffect(() => {
         setInput({ ...data })
-        console.log("data of ModelEdit: ", data)
     }, [data])
 
     const mapHandleSubmit = {
@@ -153,7 +152,7 @@ const ModelEdit = () => {
         formData.append("birthday", birthday)
         formData.append("phone", phone)
         formData.append("address", address)
-        console.log("form submit update profile: ", formData, input)
+
         dispatch(updateCurrenUserAction({ id, data: formData }))
             .unwrap()
             .then(handleSuccess)
@@ -177,7 +176,7 @@ const ModelEdit = () => {
             })
         if (content && content !== data.content) data.append("content", content)
         if (hashtag && hashtag !== data.hashtag) data.append("hashtag", hashtag)
-        console.log("form submit edit post: ", data)
+
         dispatch(updatePost({ id, data }))
             .unwrap()
             .then(handleSuccess)
@@ -218,7 +217,6 @@ const ModelEdit = () => {
             data.append("deadline", deadline)
         if (title && title != data.title) data.append("title", title)
 
-        console.log("form submit edit Auction: ", data)
         dispatch(updateAuction({ id, data }))
             .unwrap()
             .then(handleSuccess)
@@ -247,7 +245,7 @@ const ModelEdit = () => {
                 "Bạn phải có nội dung hoặc hình ảnh để đăng."
             )
         if (hashtag !== "") data.append("hashtag", hashtag)
-        console.log("form submit add post: ", data)
+
         dispatch(postPostAction(data))
             .unwrap()
             .then(handleSuccess)
@@ -285,7 +283,6 @@ const ModelEdit = () => {
         data.append("deadline", deadline)
         data.append("category", parseInt(category))
 
-        console.log("form submit add post: ", data)
         dispatch(postAuctionAction(data))
             .unwrap()
             .then(handleSuccess)
