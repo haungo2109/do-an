@@ -7,18 +7,19 @@ import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons"
 import NotificationScreen from "../screens/NotificationScreen"
 import AuctionDetailScreen from "../screens/AuctionDetailScreen"
 import PostDetailScreen from "../screens/PostDetailScreen"
+import UserAuctionJoinScreen from "../screens/UserAuctionJoinSreen"
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 
 const TabHome = () => (
-    <Tab.Navigator initialRouteName="UserAuction">
+    <Tab.Navigator initialRouteName="UserAuctionJoin">
         <Tab.Screen
             name="UserProfile"
             component={UserProfileScreen}
             options={{
                 headerShown: false,
-                tabBarLabel: "Thông tin người dùng",
+                tabBarLabel: "Thông tin cá nhân",
                 tabBarIcon: () => (
                     <AntDesign name="user" size={24} color="black" />
                 ),
@@ -29,7 +30,18 @@ const TabHome = () => (
             component={UserAuctionScreen}
             options={{
                 headerShown: false,
-                tabBarLabel: "Các đấu giá của bạn",
+                tabBarLabel: "Đấu giá của bạn",
+                tabBarIcon: () => (
+                    <FontAwesome name="feed" size={24} color="black" />
+                ),
+            }}
+        />
+        <Tab.Screen
+            name="UserAuctionJoin"
+            component={UserAuctionJoinScreen}
+            options={{
+                headerShown: false,
+                tabBarLabel: "Đấu giá đã tham gia",
                 tabBarIcon: () => (
                     <FontAwesome name="feed" size={24} color="black" />
                 ),

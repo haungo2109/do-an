@@ -19,6 +19,10 @@ const auctionApi = {
         const url = "/auction/owner/"
         return api.get(url)
     },
+    getAuctionYouJoin: () => {
+        const url = "/auction/auction_join/"
+        return api.get(url)
+    },
     getAuction: (auctionId) => {
         const url = `/auction/${auctionId}/`
         return api.get(url)

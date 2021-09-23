@@ -32,6 +32,13 @@ export const getMyAuction = createAsyncThunk(
         return response
     }
 )
+export const getAuctionYouJoin = createAsyncThunk(
+    "auction/fetchAuctionYouJoin",
+    async () => {
+        const response = await auctionApi.getAuctionYouJoin()
+        return response
+    }
+)
 export const updateAuction = createAsyncThunk(
     "auction/updateAuction",
     async ({ id, data }) => {
@@ -116,6 +123,13 @@ const auctionSlice = createSlice({
             })
         })
         builder.addCase(getMyAuction.fulfilled, (state, action) => {
+            state = Object.assign(state, {
+                data: action.payload,
+                loading: false,
+                error: "",
+            })
+        })
+        builder.addCase(getAuctionYouJoin.fulfilled, (state, action) => {
             state = Object.assign(state, {
                 data: action.payload,
                 loading: false,

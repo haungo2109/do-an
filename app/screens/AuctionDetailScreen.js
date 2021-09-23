@@ -83,16 +83,26 @@ const TextStatusComment = styled.Text`
     padding: 2px;
     background-color: ${Colors.red5};
 `
+const ButtonPayment = styled(SubmitButton)``
+const TextButtonPayment = styled(TextSubmitButton)``
+const WrapperTextInfo = styled.View`
+    margin-top: 5px;
+    margin-bottom: 10px;
+    justify-content: center;
+    align-items: center;
+`
+const TextInfo = styled.Text`
+    font-size: ${Font.big};
+`
 
 function AuctionDetailScreen({ route }) {
     const dispatch = useDispatch()
 
     const [item, setItem] = useState(route.params)
-    const [inputComment, setInputComment] = useState("")
-    const [inputPrice, setInputPrice] = useState("")
 
     const { data } = useSelector((state) => state.comment)
     const user = useSelector((state) => state.user)
+    const payment = useSelector((state) => state.paymentMethod)
     const { showModelMenu } = useModelMenu()
 
     useEffect(() => {
@@ -108,7 +118,9 @@ function AuctionDetailScreen({ route }) {
     }, [])
 
     const handlePressMenu = (uid, auction) => {
-        let comment = data.find((c) => c.status_transaction == "in process")
+        let comment = data.find(
+            (c) => c.status_transaction == "in process"
+        ) || { id: 0 }
         if (user.id === uid) {
             let listChoose = ["editAuction", "deleteAuction"]
             if (item.status_auction === "in process") {
@@ -132,23 +144,54 @@ function AuctionDetailScreen({ route }) {
                 data: auction,
             })
     }
-    const handleSendComment = () => {
-        const data = new FormData()
-        data.append("content", inputComment)
-        data.append("price", inputPrice)
-        dispatch(sendAuctionComment({ id: item.id, data })).then(() => {
-            setInputComment("")
-            setInputPrice("")
-        })
+
+    const getNamePaymentMethod = (id) => {
+        let index = parseInt(id) - 1
+        return payment[index].name
     }
 
+    const paywithMomo = () => {}
+    const renderActionForBuyler = () => {
+        switch (item.status_auction) {
+            case "fail":
+            case "success":
+                return null
+            case "in process":
+                if (item.payment_method === 1)
+                    return (
+                        <ButtonPayment>
+                            <TextButtonPayment onPress={paywithMomo}>
+                                Thanh toán bằng Momo
+                            </TextButtonPayment>
+                        </ButtonPayment>
+                    )
+                else {
+                    return (
+                        <WrapperTextInfo>
+                            <TextInfo>
+                                Vui lòng liên hệ với {item.user.full_name} để
+                                thanh toán
+                            </TextInfo>
+                        </WrapperTextInfo>
+                    )
+                }
+            default:
+                return <InputCommentForm user={user} auctionId={item.id} />
+        }
+    }
     return (
         <ScrollView>
-            {item?.user && (
-                <Auction {...item} handlePressMenu={handlePressMenu} />
+            {item.payment_method !== undefined && (
+                <Auction
+                    showAll={true}
+                    {...item}
+                    payment_method={getNamePaymentMethod(item.payment_method)}
+                    handlePressMenu={handlePressMenu}
+                />
             )}
             {item?.user && (
                 <WrapperComment>
+                    {/* RENDER COMMENT */}
                     {data.map((c) => (
                         <ItemComment
                             user={c.user}
@@ -158,6 +201,7 @@ function AuctionDetailScreen({ route }) {
                             key={c.id}
                         />
                     ))}
+                    {/* RENDER ACTION FOR OWNER AND BUYLER */}
                     {user.id === item.user.id ? (
                         item.status_auction === "being auctioned" ? (
                             <SelectStatusComment
@@ -167,39 +211,53 @@ function AuctionDetailScreen({ route }) {
                             />
                         ) : null
                     ) : (
-                        <WrapperInputComment>
-                            <AvatarToProfile
-                                source={{
-                                    uri: baseURL + user.avatar,
-                                }}
-                                user_id={user.id}
-                            />
-                            <WrapperInput>
-                                <TextInput
-                                    onChangeText={setInputComment}
-                                    value={inputComment}
-                                    placeholder="Nhập bình luận..."
-                                />
-                                <PriceInput
-                                    onChangeText={setInputPrice}
-                                    value={inputPrice}
-                                    placeholder="Nhập định giá của bạn..."
-                                />
-                            </WrapperInput>
-                            <ButtonSendComment onPress={handleSendComment}>
-                                <Icon>
-                                    <FontAwesome
-                                        name="send"
-                                        size={24}
-                                        color="black"
-                                    />
-                                </Icon>
-                            </ButtonSendComment>
-                        </WrapperInputComment>
+                        renderActionForBuyler()
                     )}
                 </WrapperComment>
             )}
         </ScrollView>
+    )
+}
+const InputCommentForm = ({ user, auctionId }) => {
+    const [inputComment, setInputComment] = useState("")
+    const [inputPrice, setInputPrice] = useState("")
+    const dispatch = useDispatch()
+
+    const handleSendComment = () => {
+        const data = new FormData()
+        data.append("content", inputComment)
+        data.append("price", inputPrice)
+        dispatch(sendAuctionComment({ id: auctionId, data })).then(() => {
+            setInputComment("")
+            setInputPrice("")
+        })
+    }
+    return (
+        <WrapperInputComment>
+            <AvatarToProfile
+                source={{
+                    uri: baseURL + user.avatar,
+                }}
+                user_id={user.id}
+            />
+            <WrapperInput>
+                <TextInput
+                    onChangeText={setInputComment}
+                    value={inputComment}
+                    placeholder="Nhập bình luận..."
+                />
+                <PriceInput
+                    onChangeText={setInputPrice}
+                    value={inputPrice}
+                    placeholder="Nhập định giá của bạn..."
+                />
+            </WrapperInput>
+            <ButtonSendComment onPress={handleSendComment}>
+                <Icon>
+                    <FontAwesome name="send" size={24} color="black" />
+                </Icon>
+            </ButtonSendComment>
+        </WrapperInputComment>
     )
 }
 const ItemComment = ({ user, content, price, status_transaction }) => {

@@ -11,6 +11,13 @@ import { Dimensions, FlatList, Image, View } from "react-native"
 import { useNavigation } from "@react-navigation/core"
 const { width: windowWidth, height: windowHeight } = Dimensions.get("window")
 
+const ColorStatusAuction = {
+    "being auctioned": Colors.gray1,
+    "in process": Colors.yellow5,
+    succ: Colors.green5,
+    fail: Colors.red5,
+}
+
 const Container = styled.View`
     height: ${(props) => props.heightContainer};
     margin-bottom: 10px;
@@ -40,7 +47,8 @@ const Time = styled.Text`
 `
 const WrapperText = styled.View`
     padding: 0 11px;
-    border-left-color: ${(props) => props.border || "palevioletred"};
+    border-left-color: ${(props) =>
+        ColorStatusAuction[props.status] || "palevioletred"};
     border-left-width: 5px;
 `
 const TextContent = styled.Text`
@@ -114,6 +122,7 @@ function Auction({
     status_auction,
     category,
     payment_method,
+    showAll = false,
 }) {
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -127,7 +136,7 @@ function Auction({
     }
     return (
         <Container
-            heightContainer={auction_images.length === 0 ? "200px" : "600px"}
+            heightContainer={auction_images.length === 0 ? "200px" : "700px"}
         >
             <Header>
                 <Row>
@@ -173,21 +182,22 @@ function Auction({
                     />
                 </ButtonMenu>
             </Header>
-            <WrapperText
-                border={
-                    status_auction == "being auctioned"
-                        ? Colors.green5
-                        : Colors.yellow5
-                }
-            >
+            <WrapperText status={status_auction}>
                 <TextTitle>{title}</TextTitle>
                 <TextContent>{content}</TextContent>
                 <TextContent>Điều kiện: {condition}</TextContent>
                 <TextContent>Giá cơ bản: {base_price}</TextContent>
-                <TextContent>Hạn đấu giá: {deadline.slice(0, 10)}</TextContent>
-                <TextContent>
-                    Phương thức thanh toán: {payment_method}
-                </TextContent>
+                {showAll === true ? (
+                    <>
+                        <TextContent>
+                            Hạn đấu giá: {deadline.slice(0, 10)}
+                        </TextContent>
+                        <TextContent>
+                            Phương thức thanh toán: {payment_method}
+                        </TextContent>
+                        <TextContent>Trạng thái: {status_auction}</TextContent>
+                    </>
+                ) : null}
             </WrapperText>
             {auction_images?.length !== 0 ? (
                 <FlatList
@@ -239,6 +249,7 @@ function Auction({
                                 deadline,
                                 status_auction,
                                 category,
+                                payment_method,
                             })
                         }}
                     >
